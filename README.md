@@ -19,4 +19,5 @@ Features
 - High performance memory and disk image cache.
 - High performance image loader to avoid main thread blocked.
 
-<img src="https://raw.github.com/ibireme/YYWebImage/Demo/Demo.gif" width="320">
+![niconiconi~](https://raw.github.com/ibireme/YYWebImage/master/Demo/Demo.gif
+)
