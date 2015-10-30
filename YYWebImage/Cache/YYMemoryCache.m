@@ -202,7 +202,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 
 - (void)_trimInBackground {
     dispatch_async(_queue, ^{
-        [self _trimToCost:self->_countLimit];
+        [self _trimToCost:self->_costLimit];
         [self _trimToCount:self->_countLimit];
         [self _trimToAge:self->_ageLimit];
     });
