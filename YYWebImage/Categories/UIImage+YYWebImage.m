@@ -1,6 +1,6 @@
 //
-//  UIImage+YYAdd.m
-//  YYKit <https://github.com/ibireme/YYKit>
+//  UIImage+YYWebImage.m
+//  YYWebImage <https://github.com/ibireme/YYWebImage>
 //
 //  Created by ibireme on 13/4/4.
 //  Copyright (c) 2015 ibireme.

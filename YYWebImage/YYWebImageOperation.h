@@ -1,6 +1,6 @@
 //
 //  YYWebImageOperation.h
-//  YYKit <https://github.com/ibireme/YYKit>
+//  YYWebImage <https://github.com/ibireme/YYWebImage>
 //
 //  Created by ibireme on 15/2/15.
 //  Copyright (c) 2015 ibireme.

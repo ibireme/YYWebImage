@@ -72,13 +72,13 @@
 #define PACKAGE "libwebp"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "http://code.google.com/p/webp/issues"
+#define PACKAGE_BUGREPORT "https://bugs.chromium.org/p/webp"
 
 /* Define to the full name of this package. */
 #define PACKAGE_NAME "libwebp"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libwebp 0.4.3"
+#define PACKAGE_STRING "libwebp 0.4.4"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libwebp"
@@ -87,7 +87,7 @@
 #define PACKAGE_URL "http://developers.google.com/speed/webp"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.4.3"
+#define PACKAGE_VERSION "0.4.4"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
@@ -97,7 +97,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "0.4.3"
+#define VERSION "0.4.4"
 
 /* Enable experimental code */
 /* #undef WEBP_EXPERIMENTAL_FEATURES */

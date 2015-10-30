@@ -1,6 +1,6 @@
 //
 //  MKAnnotationView+YYWebImage.m
-//  YYKit <https://github.com/ibireme/YYKit>
+//  YYWebImage <https://github.com/ibireme/YYWebImage>
 //
 //  Created by ibireme on 15/2/23.
 //  Copyright (c) 2015 ibireme.
