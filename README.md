@@ -26,6 +26,7 @@ Features
 - High performance memory and disk image cache.
 - High performance image loader to avoid main thread blocked.
 - Image effect: blur, round corner, resize, color tint, crop, rotate and more.
+- Fully documented.
 
 Usage
 ==============
@@ -148,6 +149,7 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 - 高性能的内存和磁盘缓存。
 - 高性能的图片设置方式，以避免主线程阻塞。
 - 常见图片处理：模糊、圆角、大小调整、裁切、旋转、色调等。
+- 每个类和方法都有完善的文档注释。
 
 用法
 ==============
