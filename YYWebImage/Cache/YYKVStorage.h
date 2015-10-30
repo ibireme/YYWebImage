@@ -1,6 +1,6 @@
 //
 //  YYKVStorage.h
-//  YYKit <https://github.com/ibireme/YYKit>
+//  YYCache <https://github.com/ibireme/YYCache>
 //
 //  Created by ibireme on 15/4/22.
 //  Copyright (c) 2015 ibireme.

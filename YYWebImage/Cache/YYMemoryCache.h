@@ -1,6 +1,6 @@
 //
 //  YYMemoryCache.h
-//  YYKit <https://github.com/ibireme/YYKit>
+//  YYCache <https://github.com/ibireme/YYCache>
 //
 //  Created by ibireme on 15/2/7.
 //  Copyright (c) 2015 ibireme.
@@ -108,13 +108,20 @@
 @property (copy) void(^didEnterBackgroundBlock)(YYMemoryCache *cache);
 
 /**
- If `YES`, the key-value object will be released on main thread, otherwise on
- background thread. Default is NO. 
+ If `YES`, the key-value pair will be released on main thread, otherwise on
+ background thread. Default is NO.
  
  @discussion You may set this value to `YES` if the key-value object contains
  the instance which should be released in main thread (such as UIView/CALayer).
  */
 @property (assign) BOOL releaseOnMainThread;
+
+/**
+ If `YES`, the key-value pair will be released asynchronously to avoid blocking 
+ the access methods, otherwise it will be released in the access method  
+ (such as removeObjectForKey:). Default is YES.
+ */
+@property (assign) BOOL releaseAsynchronously;
 
 
 #pragma mark - Access Methods

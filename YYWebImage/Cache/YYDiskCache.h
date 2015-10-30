@@ -1,6 +1,6 @@
 //
 //  YYDiskCache.h
-//  YYKit <https://github.com/ibireme/YYKit>
+//  YYCache <https://github.com/ibireme/YYCache>
 //
 //  Created by ibireme on 15/2/11.
 //  Copyright (c) 2015 ibireme.
@@ -88,8 +88,8 @@
  The maximum number of objects the cache should hold.
  
  @discussion The default value is NSUIntegerMax, which means no limit.
- This is not a strict limit—if the cache goes over the limit, some objects in the
- cache could be evicted later in backgound queue.
+ This is not a strict limit — if the cache goes over the limit, some objects in the
+ cache could be evicted later in background queue.
  */
 @property (assign) NSUInteger countLimit;
 
@@ -97,8 +97,8 @@
  The maximum total cost that the cache can hold before it starts evicting objects.
  
  @discussion The default value is NSUIntegerMax, which means no limit.
- This is not a strict limit—if the cache goes over the limit, some objects in the
- cache could be evicted later in backgound queue.
+ This is not a strict limit — if the cache goes over the limit, some objects in the
+ cache could be evicted later in background queue.
  */
 @property (assign) NSUInteger costLimit;
 
@@ -106,8 +106,8 @@
  The maximum expiry time of objects in cache.
  
  @discussion The default value is DBL_MAX, which means no limit.
- This is not a strict limit—if an object goes over the limit, the objects could
- be evicted later in backgound queue.
+ This is not a strict limit — if an object goes over the limit, the objects could
+ be evicted later in background queue.
  */
 @property (assign) NSTimeInterval ageLimit;
 

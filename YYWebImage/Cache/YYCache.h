@@ -1,6 +1,6 @@
 //
 //  YYCache.h
-//  YYKit <https://github.com/ibireme/YYKit>
+//  YYCache <https://github.com/ibireme/YYCache>
 //
 //  Created by ibireme on 15/2/13.
 //  Copyright (c) 2015 ibireme.
@@ -11,7 +11,13 @@
 
 #import <Foundation/Foundation.h>
 
-#if __has_include(<YYWebImage/YYWebImage.h>)
+#if __has_include(<YYCache/YYCache.h>)
+FOUNDATION_EXPORT double YYCacheVersionNumber;
+FOUNDATION_EXPORT const unsigned char YYCacheVersionString[];
+#import <YYCache/YYMemoryCache.h>
+#import <YYCache/YYDiskCache.h>
+#import <YYCache/YYKVStorage.h>
+#elif __has_include(<YYWebImage/YYCache.h>)
 #import <YYWebImage/YYMemoryCache.h>
 #import <YYWebImage/YYDiskCache.h>
 #import <YYWebImage/YYKVStorage.h>

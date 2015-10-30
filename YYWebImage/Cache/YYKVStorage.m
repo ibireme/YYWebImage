@@ -1,6 +1,6 @@
 //
 //  YYKVStorage.m
-//  YYKit <https://github.com/ibireme/YYKit>
+//  YYCache <https://github.com/ibireme/YYCache>
 //
 //  Created by ibireme on 15/4/22.
 //  Copyright (c) 2015 ibireme.
@@ -651,7 +651,7 @@ static NSString *const kTrashDirectoryName = @"trash";
     _type = type;
     _dataPath = [path stringByAppendingPathComponent:kDataDirectoryName];
     _trashPath = [path stringByAppendingPathComponent:kTrashDirectoryName];
-    _trashQueue = dispatch_queue_create("com.ibireme.yykit.cache.disk.trash", DISPATCH_QUEUE_SERIAL);
+    _trashQueue = dispatch_queue_create("com.ibireme.cache.disk.trash", DISPATCH_QUEUE_SERIAL);
     _dbPath = [path stringByAppendingPathComponent:kDBFileName];
     _dbStateLock = OS_SPINLOCK_INIT;
     _errorLogsEnabled = YES;

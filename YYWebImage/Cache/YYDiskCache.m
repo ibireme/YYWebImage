@@ -1,6 +1,6 @@
 //
 //  YYDiskCache.m
-//  YYKit <https://github.com/ibireme/YYKit>
+//  YYCache <https://github.com/ibireme/YYCache>
 //
 //  Created by ibireme on 15/2/11.
 //  Copyright (c) 2015 ibireme.
@@ -150,7 +150,7 @@ static NSString *_YYNSStringMD5(NSString *string) {
     _kv = kv;
     _path = path;
     _lock = dispatch_semaphore_create(1);
-    _queue = dispatch_queue_create("com.ibireme.yykit.cache.disk", DISPATCH_QUEUE_CONCURRENT);
+    _queue = dispatch_queue_create("com.ibireme.cache.disk", DISPATCH_QUEUE_CONCURRENT);
     _inlineThreshold = threshold;
     _countLimit = NSUIntegerMax;
     _costLimit = NSUIntegerMax;

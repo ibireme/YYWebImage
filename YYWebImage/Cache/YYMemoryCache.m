@@ -1,6 +1,6 @@
 //
 //  YYMemoryCache.m
-//  YYKit <https://github.com/ibireme/YYKit>
+//  YYCache <https://github.com/ibireme/YYCache>
 //
 //  Created by ibireme on 15/2/7.
 //  Copyright (c) 2015 ibireme.
@@ -14,6 +14,7 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import <libkern/OSAtomic.h>
+#import <pthread.h>
 
 #if __has_include("YYDispatchQueuePool.h")
 #import "YYDispatchQueuePool.h"
@@ -64,6 +65,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     _YYLinkedMapNode *_head; // MRU, do not change it directly
     _YYLinkedMapNode *_tail; // LRU, do not change it directly
     BOOL _releaseOnMainThread;
+    BOOL _releaseAsynchronously;
 }
 
 /// Insert a node at head and update the total cost.
@@ -88,9 +90,11 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 
 @implementation _YYLinkedMap
 
-- (instancetype) init{
+- (instancetype)init {
     self = [super init];
     _dic = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    _releaseOnMainThread = NO;
+    _releaseAsynchronously = YES;
     return self;
 }
 
@@ -160,10 +164,19 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     if (CFDictionaryGetCount(_dic) > 0) {
         CFMutableDictionaryRef holder = _dic;
         _dic = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-        dispatch_queue_t queue = _releaseOnMainThread ? dispatch_get_main_queue() : YYMemoryCacheGetReleaseQueue();
-        dispatch_async(queue, ^{
-            CFRelease(holder); // hold and release in specified queue
-        });
+        
+        if (_releaseAsynchronously) {
+            dispatch_queue_t queue = _releaseOnMainThread ? dispatch_get_main_queue() : YYMemoryCacheGetReleaseQueue();
+            dispatch_async(queue, ^{
+                CFRelease(holder); // hold and release in specified queue
+            });
+        } else if (_releaseOnMainThread && !pthread_main_np()) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                CFRelease(holder); // hold and release in specified queue
+            });
+        } else {
+            CFRelease(holder);
+        }
     }
 }
 
@@ -322,7 +335,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     self = super.init;
     _lock = OS_SPINLOCK_INIT;
     _lru = [_YYLinkedMap new];
-    _queue = dispatch_queue_create("com.ibireme.yykit.cache.memory", DISPATCH_QUEUE_SERIAL);
+    _queue = dispatch_queue_create("com.ibireme.cache.memory", DISPATCH_QUEUE_SERIAL);
     
     _countLimit = NSUIntegerMax;
     _costLimit = NSUIntegerMax;
@@ -368,6 +381,19 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 - (void)setReleaseInMainThread:(BOOL)releaseInMainThread {
     OSSpinLockLock(&_lock);
     _lru->_releaseOnMainThread = releaseInMainThread;
+    OSSpinLockUnlock(&_lock);
+}
+
+- (BOOL)releaseAsynchronously {
+    OSSpinLockLock(&_lock);
+    BOOL releaseAsynchronously = _lru->_releaseAsynchronously;
+    OSSpinLockUnlock(&_lock);
+    return releaseAsynchronously;
+}
+
+- (void)setReleaseAsynchronously:(BOOL)releaseAsynchronously {
+    OSSpinLockLock(&_lock);
+    _lru->_releaseAsynchronously = releaseAsynchronously;
     OSSpinLockUnlock(&_lock);
 }
 
@@ -426,10 +452,16 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     }
     if (_lru->_totalCount > _countLimit) {
         _YYLinkedMapNode *node = [_lru removeTailNode];
-        dispatch_queue_t queue = _lru->_releaseOnMainThread ? dispatch_get_main_queue() : YYMemoryCacheGetReleaseQueue();
-        dispatch_async(queue, ^{
-            [node class]; //hold and release in queue
-        });
+        if (_lru->_releaseAsynchronously) {
+            dispatch_queue_t queue = _lru->_releaseOnMainThread ? dispatch_get_main_queue() : YYMemoryCacheGetReleaseQueue();
+            dispatch_async(queue, ^{
+                [node class]; //hold and release in queue
+            });
+        } else if (_lru->_releaseOnMainThread && !pthread_main_np()) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [node class]; //hold and release in queue
+            });
+        }
     }
     OSSpinLockUnlock(&_lock);
 }
@@ -441,10 +473,16 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     if (node) {
         [_lru removeNode:node];
         _YYLinkedMapNode *node = [_lru removeTailNode];
-        dispatch_queue_t queue = _lru->_releaseOnMainThread ? dispatch_get_main_queue() : YYMemoryCacheGetReleaseQueue();
-        dispatch_async(queue, ^{
-            [node class]; //release in queue
-        });
+        if (_lru->_releaseAsynchronously) {
+            dispatch_queue_t queue = _lru->_releaseOnMainThread ? dispatch_get_main_queue() : YYMemoryCacheGetReleaseQueue();
+            dispatch_async(queue, ^{
+                [node class]; //hold and release in queue
+            });
+        } else if (_lru->_releaseOnMainThread && !pthread_main_np()) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [node class]; //hold and release in queue
+            });
+        }
     }
     OSSpinLockUnlock(&_lock);
 }

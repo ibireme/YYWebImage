@@ -149,7 +149,7 @@ static NSData *JPEGSOSMarker() {
 /// Network thread entry point.
 + (void)_networkThreadMain:(id)object {
     @autoreleasepool {
-        [[NSThread currentThread] setName:@"com.ibireme.yykit.webimage.request"];
+        [[NSThread currentThread] setName:@"com.ibireme.webimage.request"];
         NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
         [runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
         [runLoop run];
@@ -186,11 +186,11 @@ static NSData *JPEGSOSMarker() {
         if ([UIDevice currentDevice].systemVersion.floatValue >= 8.0) {
             for (NSUInteger i = 0; i < queueCount; i++) {
                 dispatch_queue_attr_t attr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_UTILITY, 0);
-                queues[i] = dispatch_queue_create("com.ibireme.yykit.decode", attr);
+                queues[i] = dispatch_queue_create("com.ibireme.image.decode", attr);
             }
         } else {
             for (NSUInteger i = 0; i < queueCount; i++) {
-                queues[i] = dispatch_queue_create("com.ibireme.yykit.decode", DISPATCH_QUEUE_SERIAL);
+                queues[i] = dispatch_queue_create("com.ibireme.image.decode", DISPATCH_QUEUE_SERIAL);
                 dispatch_set_target_queue(queues[i], dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0));
             }
         }
@@ -381,7 +381,7 @@ static NSData *JPEGSOSMarker() {
             _data = nil;
             NSError *error = nil;
             if (!image) {
-                error = [NSError errorWithDomain:@"com.ibireme.yykit.image" code:-1 userInfo:@{ NSLocalizedDescriptionKey : @"Web image decode fail." }];
+                error = [NSError errorWithDomain:@"com.ibireme.image" code:-1 userInfo:@{ NSLocalizedDescriptionKey : @"Web image decode fail." }];
             }
             if (_completion) _completion(image, _request.URL, YYWebImageFromRemote, YYWebImageStageFinished, error);
             [self _finish];
