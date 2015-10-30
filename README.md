@@ -82,7 +82,7 @@ Usage
 Installation
 ==============
 
-### Cocoapods (unavailable temporarily)
+### Cocoapods
 
 1. Update cocoapods to the latest version.
 1. Add `pod "YYWebImage"` to your Podfile.
@@ -205,7 +205,7 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 安装
 ==============
 
-### Cocoapods (还没提交，暂时不可用)
+### Cocoapods
 
 1. 将 cocoapods 更新至最新版本.
 1. 在 Podfile 中添加 `pod "YYWebImage"`。
