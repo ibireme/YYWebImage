@@ -218,7 +218,7 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 3. 导入 \<YYWebImage/YYWebImage.h\>。
 4. 注意: carthage framework 并没有包含 webp 组件。如果你需要支持 webp，可以用 Cocoapods 安装，或者手动安装。
 
-### Manually
+### 手动安装
 
 1. 下载 YYWebImage 文件夹内的所有内容。
 2. 将 YYWebModel 内的源文件添加(拖放)到你的工程。
