@@ -128,6 +128,8 @@ YYImage is provided under the MIT license. See LICENSE file for details.
 ---
 中文介绍
 ==============
+![ProgressiveBlur~](https://raw.github.com/ibireme/YYWebImage/master/Demo/Demo.gif
+)
 
 YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme/YYKit) 组件之一).
 
