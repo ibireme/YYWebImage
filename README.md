@@ -134,7 +134,7 @@ YYImage is provided under the MIT license. See LICENSE file for details.
 
 YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme/YYKit) 组件之一).
 
-其设计目的是试图替代 SDWebImage、PINRemoteImage、FLAnimatedImage 等开源框架，它支持这些开源框架的几乎所有的功能，同时增加了大量新特性、并且有不小的性能提升。
+其设计目的是试图替代 SDWebImage、PINRemoteImage、FLAnimatedImage 等开源框架，它支持这些开源框架的大部分功能，同时增加了大量新特性、并且有不小的性能提升。
 
 它底层用 [YYCache](https://github.com/ibireme/YYCache) 实现了内存和磁盘缓存, 用 [YYImage](https://github.com/ibireme/YYImage) 实现了 WebP/APNG/GIF 动图的解码和播放。<br/>
 你可以查看这些项目以获得更多信息。
@@ -246,3 +246,7 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 许可证
 ==============
 YYWebImage 使用 MIT 许可证，详情见 LICENSE 文件。
+
+相关链接
+==============
+[移动端图片格式调研](http://blog.ibireme.com/2015/11/02/mobile_image_benchmark/)
