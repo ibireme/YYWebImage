@@ -18,7 +18,7 @@
  
  YYMemoryCache objects differ from NSCache in a few ways:
  
- * It use LRU (least-recently-used) to remove objects; NSCache's eviction method 
+ * It uses LRU (least-recently-used) to remove objects; NSCache's eviction method 
    is non-deterministic.
  * It can be controlled by cost, count and age; NSCache's limits are imprecise.
  * It can be configured to automatically evict objects when receive memory 
