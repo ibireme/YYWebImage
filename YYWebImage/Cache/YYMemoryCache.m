@@ -52,7 +52,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 
 
 /**
- A linkd map used by YYMemoryCache.
+ A linked map used by YYMemoryCache.
  It's not thread-safe and does not validate the parameters.
  
  Typically, you should not use this class directly.
