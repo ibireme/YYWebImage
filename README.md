@@ -4,7 +4,8 @@ YYWebImage <a href="#中文介绍">中文介绍</a>
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)&nbsp;
 [![Cocoapods](http://img.shields.io/cocoapods/v/YYWebImage.svg?style=flat)](http://cocoapods.org/?q= YYWebImage)&nbsp;
 [![Cocoapods](http://img.shields.io/cocoapods/p/YYWebImage.svg?style=flat)](http://cocoapods.org/?q= YYWebImage)&nbsp;
-[![Support](https://img.shields.io/badge/support-iOS%206%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/ios/)
+[![Support](https://img.shields.io/badge/support-iOS%206%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/ios/)&nbsp;
+[![Build Status](https://travis-ci.org/ibireme/YYWebImage.svg?branch=master)](https://travis-ci.org/ibireme/YYWebImage)
 
 ![ProgressiveBlur~](https://raw.github.com/ibireme/YYWebImage/master/Demo/Demo.gif
 )
