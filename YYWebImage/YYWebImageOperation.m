@@ -420,7 +420,7 @@ static NSData *JPEGSOSMarker() {
     }
 }
 
-- (nullable NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
+- (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
     if (!cachedResponse) return cachedResponse;
     if (_options & YYWebImageOptionUseNSURLCache) {
         return cachedResponse;
