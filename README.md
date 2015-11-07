@@ -103,14 +103,14 @@ Installation
 1. Download all the files in the YYWebImage subdirectory.
 2. Add the source files to your Xcode project.
 3. Link with required frameworks:
-	* UIKit.framework
-	* CoreFoundation.framework
-	* QuartzCore.framework
-	* AssetsLibrary.framework
-	* ImageIO.framework
-	* Accelerate.framework
-	* MobileCoreServices.framework
-	* libsqlite3
+	* UIKit
+	* CoreFoundation
+	* QuartzCore
+	* AssetsLibrary
+	* ImageIO
+	* Accelerate
+	* MobileCoreServices
+	* sqlite3
 	* libz
 4. Add `Vendor/WebP.framework`(static library) to your Xcode project if you want to support webp.
 5. Import `YYWebImage.h`.
@@ -232,14 +232,14 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 1. 下载 YYWebImage 文件夹内的所有内容。
 2. 将 YYWebModel 内的源文件添加(拖放)到你的工程。
 3. 链接以下 frameworks:
-	* UIKit.framework
-	* CoreFoundation.framework
-	* QuartzCore.framework
-	* AssetsLibrary.framework
-	* ImageIO.framework
-	* Accelerate.framework
-	* MobileCoreServices.framework
-	* libsqlite3
+	* UIKit
+	* CoreFoundation
+	* QuartzCore
+	* AssetsLibrary
+	* ImageIO
+	* Accelerate
+	* MobileCoreServices
+	* sqlite3
 	* libz
 4. 如果你需要支持 webp，可以将 `Vendor/WebP.framework`(静态库) 加入你的工程。
 5. 导入 `YYWebImage.h`。

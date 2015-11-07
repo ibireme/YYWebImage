@@ -156,18 +156,41 @@
  @param radius       The radius of each corner oval. Values larger than half the
                      rectangle's width or height are clamped appropriately to
                      half the width or height.
+
+ @param borderWidth  The inset border line width. Values larger than half the rectangle's
+                     width or height are clamped appropriately to half the width 
+                     or height.
+ 
+ @param borderColor  The border stroke color. nil means clear color.
+ */
+- (UIImage *)yy_imageByRoundCornerRadius:(CGFloat)radius
+                             borderWidth:(CGFloat)borderWidth
+                             borderColor:(UIColor *)borderColor;
+
+/**
+ Rounds a new image with a given corner size.
+ 
+ @param radius       The radius of each corner oval. Values larger than half the
+                     rectangle's width or height are clamped appropriately to
+                     half the width or height.
  
  @param corners      A bitmask value that identifies the corners that you want
                      rounded. You can use this parameter to round only a subset
                      of the corners of the rectangle.
  
- @param borderWidth  The inset border with clear color. Values larger than half
-                     the rectangle's width or height are clamped appropriately
-                     to half the width or height.
+ @param borderWidth  The inset border line width. Values larger than half the rectangle's
+                     width or height are clamped appropriately to half the width 
+                     or height.
+ 
+ @param borderColor  The border stroke color. nil means clear color.
+ 
+ @param borderLineJoin The border line join.
  */
 - (UIImage *)yy_imageByRoundCornerRadius:(CGFloat)radius
                                  corners:(UIRectCorner)corners
-                             borderWidth:(CGFloat)borderWidth;
+                             borderWidth:(CGFloat)borderWidth
+                             borderColor:(UIColor *)borderColor
+                          borderLineJoin:(CGLineJoin)borderLineJoin;
 
 /**
  Returns a new rotated image (relative to the center).
