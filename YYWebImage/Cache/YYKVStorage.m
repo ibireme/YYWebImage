@@ -175,6 +175,24 @@ static NSString *const kTrashDirectoryName = @"trash";
     return stmt;
 }
 
+- (NSString *)_dbJoinedKeys:(NSArray *)keys {
+    NSMutableString *string = [NSMutableString new];
+    for (NSUInteger i = 0,max = keys.count; i < max; i++) {
+        [string appendString:@"?"];
+        if (i + 1 != max) {
+            [string appendString:@","];
+        }
+    }
+    return string;
+}
+
+- (void)_dbBindJoinedKeys:(NSArray *)keys stmt:(sqlite3_stmt *)stmt fromIndex:(int)index{
+    for (int i = 0, max = (int)keys.count; i < max; i++) {
+        NSString *key = keys[i];
+        sqlite3_bind_text(stmt, index + i, key.UTF8String, -1, NULL);
+    }
+}
+
 - (BOOL)_dbSaveWithKey:(NSString *)key value:(NSData *)value fileName:(NSString *)fileName extendedData:(NSData *)extendedData {
     NSString *sql = @"insert or replace into manifest (key, filename, size, inline_data, modification_time, last_access_time, extended_data) values (?1, ?2, ?3, ?4, ?5, ?6, ?7);";
     sqlite3_stmt *stmt = [self _dbPrepareStmt:sql];
@@ -218,7 +236,7 @@ static NSString *const kTrashDirectoryName = @"trash";
 - (BOOL)_dbUpdateAccessTimeWithKeys:(NSArray *)keys {
     if (![self _dbIsReady]) return NO;
     int t = (int)time(NULL);
-     NSString *sql = [NSString stringWithFormat:@"update manifest set last_access_time = %d where key in (%@);", t, [keys componentsJoinedByString:@","]];
+     NSString *sql = [NSString stringWithFormat:@"update manifest set last_access_time = %d where key in (%@);", t, [self _dbJoinedKeys:keys]];
     
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare_v2(_db, sql.UTF8String, -1, &stmt, NULL);
@@ -227,6 +245,7 @@ static NSString *const kTrashDirectoryName = @"trash";
         return NO;
     }
     
+    [self _dbBindJoinedKeys:keys stmt:stmt fromIndex:1];
     result = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
     if (result != SQLITE_DONE) {
@@ -252,7 +271,7 @@ static NSString *const kTrashDirectoryName = @"trash";
 
 - (BOOL)_dbDeleteItemWithKeys:(NSArray *)keys {
     if (![self _dbIsReady]) return NO;
-    NSString *sql =  [NSString stringWithFormat:@"delete from manifest where key in (%@);", [keys componentsJoinedByString:@","]];
+    NSString *sql =  [NSString stringWithFormat:@"delete from manifest where key in (%@);", [self _dbJoinedKeys:keys]];
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare_v2(_db, sql.UTF8String, -1, &stmt, NULL);
     if (result != SQLITE_OK) {
@@ -260,6 +279,7 @@ static NSString *const kTrashDirectoryName = @"trash";
         return NO;
     }
     
+    [self _dbBindJoinedKeys:keys stmt:stmt fromIndex:1];
     result = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
     if (result == SQLITE_ERROR) {
@@ -340,9 +360,9 @@ static NSString *const kTrashDirectoryName = @"trash";
     if (![self _dbIsReady]) return nil;
     NSString *sql;
     if (excludeInlineData) {
-        sql = [NSString stringWithFormat:@"select key, filename, size, modification_time, last_access_time, extended_data from manifest where key in (%@);", [keys componentsJoinedByString:@","]];
+        sql = [NSString stringWithFormat:@"select key, filename, size, modification_time, last_access_time, extended_data from manifest where key in (%@);", [self _dbJoinedKeys:keys]];
     } else {
-        sql = [NSString stringWithFormat:@"select key, filename, size, inline_data, modification_time, last_access_time, extended_data from manifest where key in (%@)", [keys componentsJoinedByString:@","]];
+        sql = [NSString stringWithFormat:@"select key, filename, size, inline_data, modification_time, last_access_time, extended_data from manifest where key in (%@)", [self _dbJoinedKeys:keys]];
     }
     
     sqlite3_stmt *stmt = NULL;
@@ -352,6 +372,7 @@ static NSString *const kTrashDirectoryName = @"trash";
         return nil;
     }
     
+    [self _dbBindJoinedKeys:keys stmt:stmt fromIndex:1];
     NSMutableArray *items = [NSMutableArray new];
     do {
         result = sqlite3_step(stmt);
@@ -411,7 +432,7 @@ static NSString *const kTrashDirectoryName = @"trash";
 
 - (NSMutableArray *)_dbGetFilenameWithKeys:(NSArray *)keys {
     if (![self _dbIsReady]) return nil;
-    NSString *sql = [NSString stringWithFormat:@"select filename from manifest where key in (%@);", [keys componentsJoinedByString:@","]];
+    NSString *sql = [NSString stringWithFormat:@"select filename from manifest where key in (%@);", [self _dbJoinedKeys:keys]];
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare_v2(_db, sql.UTF8String, -1, &stmt, NULL);
     if (result != SQLITE_OK) {
@@ -419,6 +440,7 @@ static NSString *const kTrashDirectoryName = @"trash";
         return nil;
     }
     
+    [self _dbBindJoinedKeys:keys stmt:stmt fromIndex:1];
     NSMutableArray *filenames = [NSMutableArray new];
     do {
         result = sqlite3_step(stmt);
