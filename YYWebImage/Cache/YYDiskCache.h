@@ -69,7 +69,7 @@
 @property (copy) id (^customUnarchiveBlock)(NSData *data);
 
 /**
- When an object needs to be saved as a file, this block will be revoked to generate
+ When an object needs to be saved as a file, this block will be invoked to generate
  a file name for a specified key. If the block is nil, the cache use md5(key) as 
  default file name.
  
@@ -186,11 +186,11 @@
 
 /**
  Returns a boolean value with the block that indicates whether a given key is in cache.
- This method returns immediately and revoke the passed block in background queue 
+ This method returns immediately and invoke the passed block in background queue 
  when the operation finished.
  
  @param key   A string identifying the value. If nil, just return NO.
- @param block A block which will be revoked in background queue when finished.
+ @param block A block which will be invoked in background queue when finished.
  */
 - (void)containsObjectForKey:(NSString *)key withBlock:(void(^)(NSString *key, BOOL contains))block;
 
@@ -205,11 +205,11 @@
 
 /**
  Returns the value associated with a given key.
- This method returns immediately and revoke the passed block in background queue
+ This method returns immediately and invoke the passed block in background queue
  when the operation finished.
  
  @param key A string identifying the value. If nil, just return nil.
- @param block A block which will be revoked in background queue when finished.
+ @param block A block which will be invoked in background queue when finished.
  */
 - (void)objectForKey:(NSString *)key withBlock:(void(^)(NSString *key, id<NSCoding> object))block;
 
@@ -224,11 +224,11 @@
 
 /**
  Sets the value of the specified key in the cache.
- This method returns immediately and revoke the passed block in background queue
+ This method returns immediately and invoke the passed block in background queue
  when the operation finished.
  
  @param object The object to be stored in the cache. If nil, it calls `removeObjectForKey:`.
- @param block  A block which will be revoked in background queue when finished.
+ @param block  A block which will be invoked in background queue when finished.
  */
 - (void)setObject:(id<NSCoding>)object forKey:(NSString *)key withBlock:(void(^)(void))block;
 
@@ -242,11 +242,11 @@
 
 /**
  Removes the value of the specified key in the cache.
- This method returns immediately and revoke the passed block in background queue
+ This method returns immediately and invoke the passed block in background queue
  when the operation finished.
  
  @param key The key identifying the value to be removed. If nil, this method has no effect.
- @param block  A block which will be revoked in background queue when finished.
+ @param block  A block which will be invoked in background queue when finished.
  */
 - (void)removeObjectForKey:(NSString *)key withBlock:(void(^)(NSString *key))block;
 
@@ -258,10 +258,10 @@
 
 /**
  Empties the cache.
- This method returns immediately and revoke the passed block in background queue
+ This method returns immediately and invoke the passed block in background queue
  when the operation finished.
  
- @param block  A block which will be revoked in background queue when finished.
+ @param block  A block which will be invoked in background queue when finished.
  */
 - (void)removeAllObjectsWithBlock:(void(^)(void))block;
 
@@ -270,8 +270,8 @@
  This method returns immediately and executes the clear operation with block in background.
  
  @warning You should not send message to this instance in these blocks.
- @param progress This block will be revoked during removing, pass nil to ignore.
- @param end      This block will be revoked at the end, pass nil to ignore.
+ @param progress This block will be invoked during removing, pass nil to ignore.
+ @param end      This block will be invoked at the end, pass nil to ignore.
  */
 - (void)removeAllObjectsWithProgressBlock:(void(^)(int removedCount, int totalCount))progress
                                  endBlock:(void(^)(BOOL error))end;
@@ -287,10 +287,10 @@
 
 /**
  Get the number of objects in this cache.
- This method returns immediately and revoke the passed block in background queue
+ This method returns immediately and invoke the passed block in background queue
  when the operation finished.
  
- @param block  A block which will be revoked in background queue when finished.
+ @param block  A block which will be invoked in background queue when finished.
  */
 - (void)totalCountWithBlock:(void(^)(NSInteger totalCount))block;
 
@@ -304,10 +304,10 @@
 
 /**
  Get the total cost (in bytes) of objects in this cache.
- This method returns immediately and revoke the passed block in background queue
+ This method returns immediately and invoke the passed block in background queue
  when the operation finished.
  
- @param block  A block which will be revoked in background queue when finished.
+ @param block  A block which will be invoked in background queue when finished.
  */
 - (void)totalCostWithBlock:(void(^)(NSInteger totalCost))block;
 
@@ -327,11 +327,11 @@
 
 /**
  Removes objects from the cache use LRU, until the `totalCount` is below the specified value.
- This method returns immediately and revoke the passed block in background queue
+ This method returns immediately and invoke the passed block in background queue
  when the operation finished.
  
  @param count  The total count allowed to remain after the cache has been trimmed.
- @param block  A block which will be revoked in background queue when finished.
+ @param block  A block which will be invoked in background queue when finished.
  */
 - (void)trimToCount:(NSUInteger)count withBlock:(void(^)(void))block;
 
@@ -345,11 +345,11 @@
 
 /**
  Removes objects from the cache use LRU, until the `totalCost` is below the specified value.
- This method returns immediately and revoke the passed block in background queue
+ This method returns immediately and invoke the passed block in background queue
  when the operation finished.
  
  @param cost The total cost allowed to remain after the cache has been trimmed.
- @param block  A block which will be revoked in background queue when finished.
+ @param block  A block which will be invoked in background queue when finished.
  */
 - (void)trimToCost:(NSUInteger)cost withBlock:(void(^)(void))block;
 
@@ -363,11 +363,11 @@
 
 /**
  Removes objects from the cache use LRU, until all expiry objects removed by the specified value.
- This method returns immediately and revoke the passed block in background queue
+ This method returns immediately and invoke the passed block in background queue
  when the operation finished.
  
  @param age  The maximum age of the object.
- @param block  A block which will be revoked in background queue when finished.
+ @param block  A block which will be invoked in background queue when finished.
  */
 - (void)trimToAge:(NSTimeInterval)age withBlock:(void(^)(void))block;
 

@@ -227,8 +227,8 @@ typedef NS_ENUM(NSUInteger, YYKVStorageType) {
  Remove all items.
  
  @warning You should not send message to this instance in these blocks.
- @param progress This block will be revoked during removing, pass nil to ignore.
- @param end      This block will be revoked at the end, pass nil to ignore.
+ @param progress This block will be invoked during removing, pass nil to ignore.
+ @param end      This block will be invoked at the end, pass nil to ignore.
  */
 - (void)removeAllItemsWithProgressBlock:(void(^)(int removedCount, int totalCount))progress
                                endBlock:(void(^)(BOOL error))end;
