@@ -426,8 +426,7 @@ static NSData *JPEGSOSMarker() {
         return cachedResponse;
     } else {
         // ignore NSURLCache
-        NSCachedURLResponse *response = [[NSCachedURLResponse alloc] initWithResponse:cachedResponse.response data:cachedResponse.data userInfo:cachedResponse.userInfo ? cachedResponse.userInfo : @{} storagePolicy:NSURLCacheStorageNotAllowed];
-        return response;
+        return nil;
     }
 }
 
