@@ -230,7 +230,7 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 ### 手动安装
 
 1. 下载 YYWebImage 文件夹内的所有内容。
-2. 将 YYWebModel 内的源文件添加(拖放)到你的工程。
+2. 将 YYWebImage 内的源文件添加(拖放)到你的工程。
 3. 链接以下 frameworks:
 	* UIKit
 	* CoreFoundation
