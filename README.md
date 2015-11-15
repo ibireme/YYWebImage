@@ -2,8 +2,8 @@ YYWebImage <a href="#中文介绍">中文介绍</a>
 ==============
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/ibireme/YYWebImage/master/LICENSE)&nbsp;
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)&nbsp;
-[![Cocoapods](http://img.shields.io/cocoapods/v/YYWebImage.svg?style=flat)](http://cocoapods.org/?q= YYWebImage)&nbsp;
-[![Cocoapods](http://img.shields.io/cocoapods/p/YYWebImage.svg?style=flat)](http://cocoapods.org/?q= YYWebImage)&nbsp;
+[![CocoaPods](http://img.shields.io/cocoapods/v/YYWebImage.svg?style=flat)](http://cocoapods.org/?q= YYWebImage)&nbsp;
+[![CocoaPods](http://img.shields.io/cocoapods/p/YYWebImage.svg?style=flat)](http://cocoapods.org/?q= YYWebImage)&nbsp;
 [![Support](https://img.shields.io/badge/support-iOS%206%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/ios/)&nbsp;
 [![Build Status](https://travis-ci.org/ibireme/YYWebImage.svg?branch=master)](https://travis-ci.org/ibireme/YYWebImage)
 
@@ -83,7 +83,7 @@ Usage
 Installation
 ==============
 
-### Cocoapods
+### CocoaPods
 
 1. Update cocoapods to the latest version.
 1. Add `pod "YYWebImage"` to your Podfile.
@@ -212,7 +212,7 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 安装
 ==============
 
-### Cocoapods
+### CocoaPods
 
 1. 将 cocoapods 更新至最新版本.
 1. 在 Podfile 中添加 `pod "YYWebImage"`。
@@ -225,7 +225,7 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 1. 在 Cartfile 中添加 `github "ibireme/YYWebImage"`。
 2. 执行 `carthage update --platform ios` 并将生成的 framework 添加到你的工程。
 3. 导入 \<YYWebImage/YYWebImage.h\>。
-4. 注意: carthage framework 并没有包含 webp 组件。如果你需要支持 webp，可以用 Cocoapods 安装，或者手动安装。
+4. 注意: carthage framework 并没有包含 webp 组件。如果你需要支持 webp，可以用 cocoapods 安装，或者手动安装。
 
 ### 手动安装
 
