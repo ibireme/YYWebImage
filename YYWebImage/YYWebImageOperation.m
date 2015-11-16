@@ -12,6 +12,7 @@
 #import "YYWebImageOperation.h"
 #import "UIImage+YYWebImage.h"
 #import <ImageIO/ImageIO.h>
+#import <libkern/OSAtomic.h>
 
 #if __has_include(<YYImage/YYImage.h>)
 #import <YYImage/YYImage.h>
@@ -21,8 +22,6 @@
 
 #if __has_include("YYDispatchQueuePool.h")
 #import "YYDispatchQueuePool.h"
-#else
-#import <libkern/OSAtomic.h>
 #endif
 
 #define MIN_PROGRESSIVE_TIME_INTERVAL 0.2
