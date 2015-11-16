@@ -56,6 +56,35 @@ static NSData *JPEGSOSMarker() {
 }
 
 
+static NSMutableSet *URLBlacklist;
+static OSSpinLock URLBlacklistLock;
+
+static void URLBlacklistInit() {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        URLBlacklist = [NSMutableSet new];
+        URLBlacklistLock = OS_SPINLOCK_INIT;
+    });
+}
+
+static BOOL URLBlackListContains(NSURL *url) {
+    if (!url || url == (id)[NSNull null]) return NO;
+    URLBlacklistInit();
+    OSSpinLockLock(&URLBlacklistLock);
+    BOOL contains = [URLBlacklist containsObject:url];
+    OSSpinLockUnlock(&URLBlacklistLock);
+    return contains;
+}
+
+static void URLInBlackListAdd(NSURL *url) {
+    if (!url || url == (id)[NSNull null]) return;
+    URLBlacklistInit();
+    OSSpinLockLock(&URLBlacklistLock);
+    [URLBlacklist addObject:url];
+    OSSpinLockUnlock(&URLBlacklistLock);
+}
+
+
 /// A proxy used to hold a weak object.
 @interface _YYWebImageWeakProxy : NSProxy
 @property (nonatomic, weak, readonly) id target;
@@ -315,6 +344,17 @@ static NSData *JPEGSOSMarker() {
 - (void)_startRequest:(id)object {
     if ([self isCancelled]) return;
     @autoreleasepool {
+        if ((_options & YYWebImageOptionIgnoreFailedURL) && URLBlackListContains(_request.URL)) {
+            NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorFileDoesNotExist userInfo:@{ NSLocalizedDescriptionKey : @"Failed to load URL, blacklisted." }];
+            [_lock lock];
+            if (![self isCancelled]) {
+                if (_completion) _completion(nil, _request.URL, YYWebImageFromNone, YYWebImageStageFinished, error);
+            }
+            [self _finish];
+            [_lock unlock];
+            return;
+        }
+        
         if (_request.URL.isFileURL) {
             NSArray *keys = @[NSURLFileSizeKey];
             NSDictionary *attr = [_request.URL resourceValuesForKeys:keys error:nil];
@@ -382,6 +422,13 @@ static NSData *JPEGSOSMarker() {
             NSError *error = nil;
             if (!image) {
                 error = [NSError errorWithDomain:@"com.ibireme.image" code:-1 userInfo:@{ NSLocalizedDescriptionKey : @"Web image decode fail." }];
+                if (_options & YYWebImageOptionIgnoreFailedURL) {
+                    if (URLBlackListContains(_request.URL)) {
+                        error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorFileDoesNotExist userInfo:@{ NSLocalizedDescriptionKey : @"Failed to load URL, blacklisted." }];
+                    } else {
+                        URLInBlackListAdd(_request.URL);
+                    }
+                }
             }
             if (_completion) _completion(image, _request.URL, YYWebImageFromRemote, YYWebImageStageFinished, error);
             [self _finish];
@@ -665,6 +712,15 @@ static NSData *JPEGSOSMarker() {
                 [YYWebImageManager decrementNetworkActivityCount];
             }
             [self _finish];
+            
+            if (_options & YYWebImageOptionIgnoreFailedURL) {
+                if (error.code != NSURLErrorNotConnectedToInternet &&
+                    error.code != NSURLErrorCancelled &&
+                    error.code != NSURLErrorTimedOut &&
+                    error.code != NSURLErrorUserCancelledAuthentication) {
+                    URLInBlackListAdd(_request.URL);
+                }
+            }
         }
         [_lock unlock];
     }
