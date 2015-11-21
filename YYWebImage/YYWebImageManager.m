@@ -112,11 +112,13 @@
 }
 
 + (void)_delaySetActivity:(NSTimer *)timer {
+#ifndef YY_TARGET_IS_EXTENSION
     NSNumber *visiable = timer.userInfo;
     if ([UIApplication sharedApplication].networkActivityIndicatorVisible != visiable.boolValue) {
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:visiable.boolValue];
     }
     [timer invalidate];
+#endif
 }
 
 + (void)_changeNetworkActivityCount:(NSInteger)delta {
