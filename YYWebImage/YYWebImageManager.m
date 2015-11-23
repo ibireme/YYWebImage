@@ -15,6 +15,24 @@
 #import <objc/runtime.h>
 
 #define kNetworkIndicatorDelay (1/30.0)
+
+
+/// Returns nil in App Extension.
+static UIApplication *_YYSharedApplication() {
+    static BOOL isAppExtension = NO;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class cls = NSClassFromString(@"UIApplication");
+        if(!cls || ![cls respondsToSelector:@selector(sharedApplication)]) isAppExtension = YES;
+        if ([[[NSBundle mainBundle] bundlePath] hasSuffix:@".appex"]) isAppExtension = YES;
+    });
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+    return isAppExtension ? nil : [UIApplication performSelector:@selector(sharedApplication)];
+#pragma clang diagnostic pop
+}
+
+
 @interface _YYUIApplicationNetworkIndicatorInfo : NSObject
 @property (nonatomic, assign) NSInteger count;
 @property (nonatomic, strong) NSTimer *timer;
@@ -112,16 +130,19 @@
 }
 
 + (void)_delaySetActivity:(NSTimer *)timer {
-#ifndef YY_TARGET_IS_EXTENSION
+    UIApplication *app = _YYSharedApplication();
+    if (!app) return;
+    
     NSNumber *visiable = timer.userInfo;
-    if ([UIApplication sharedApplication].networkActivityIndicatorVisible != visiable.boolValue) {
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:visiable.boolValue];
+    if (app.networkActivityIndicatorVisible != visiable.boolValue) {
+        [app setNetworkActivityIndicatorVisible:visiable.boolValue];
     }
     [timer invalidate];
-#endif
 }
 
 + (void)_changeNetworkActivityCount:(NSInteger)delta {
+    if (!_YYSharedApplication()) return;
+    
     void (^block)() = ^{
         _YYUIApplicationNetworkIndicatorInfo *info = [self _networkIndicatorInfo];
         if (!info) {

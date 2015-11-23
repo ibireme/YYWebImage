@@ -270,13 +270,14 @@ typedef void (^YYWebImageCompletionBlock)(UIImage *image, NSURL *url, YYWebImage
 - (NSString *)cacheKeyForURL:(NSURL *)url;
 
 
-
 /**
  Increments the number of active network requests.
  If this number was zero before incrementing, this will start animating the
  status bar network activity indicator.
  
  This method is thread safe.
+ 
+ This method has no effect in App Extension.
  */
 + (void)incrementNetworkActivityCount;
 
@@ -286,6 +287,8 @@ typedef void (^YYWebImageCompletionBlock)(UIImage *image, NSURL *url, YYWebImage
  status bar network activity indicator.
  
  This method is thread safe.
+ 
+ This method has no effect in App Extension.
  */
 + (void)decrementNetworkActivityCount;
 
@@ -293,6 +296,8 @@ typedef void (^YYWebImageCompletionBlock)(UIImage *image, NSURL *url, YYWebImage
  Get current number of active network requests.
  
  This method is thread safe.
+ 
+ This method has no effect in App Extension.
  */
 + (NSInteger)currentNetworkActivityCount;
 

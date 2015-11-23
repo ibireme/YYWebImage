@@ -112,10 +112,9 @@ Installation
 	* MobileCoreServices
 	* sqlite3
 	* libz
-4. Import `YYWebImage.h`.
+4. Add `Vendor/WebP.framework`(static library) to your Xcode project if you want to support WebP.
+5. Import `YYWebImage.h`.
 
-*  If you want to support WebP format, you may add Add `Vendor/WebP.framework`(static library) to your Xcode project.
-*  If you want to use it in App Extension, you may add `YY_TARGET_IS_EXTENSION` flag in `Build Settings` - `Preprocessor Macros` sections.
 
 Documentation
 ==============
@@ -242,10 +241,9 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 	* MobileCoreServices
 	* sqlite3
 	* libz
-4. 导入 `YYWebImage.h`。
+4. 如果你需要支持 WebP，可以将 `Vendor/WebP.framework`(静态库) 加入你的工程。
+5. 导入 `YYWebImage.h`。
 
-*  如果你需要支持 WebP 格式，可以将 `Vendor/WebP.framework`(静态库) 加入你的工程。
-*  如果你需要在 App Extension 中使用这些代码, 可以在 `Build Settings` - `Preprocessor Macros` 中添加 `YY_TARGET_IS_EXTENSION` 参数。
 
 文档
 ==============

@@ -27,6 +27,22 @@
 #define MIN_PROGRESSIVE_TIME_INTERVAL 0.2
 #define MIN_PROGRESSIVE_BLUR_TIME_INTERVAL 0.4
 
+
+/// Returns nil in App Extension.
+static UIApplication *_YYSharedApplication() {
+    static BOOL isAppExtension = NO;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class cls = NSClassFromString(@"UIApplication");
+        if(!cls || ![cls respondsToSelector:@selector(sharedApplication)]) isAppExtension = YES;
+        if ([[[NSBundle mainBundle] bundlePath] hasSuffix:@".appex"]) isAppExtension = YES;
+    });
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+    return isAppExtension ? nil : [UIApplication performSelector:@selector(sharedApplication)];
+#pragma clang diagnostic pop
+}
+
 /// Returns YES if the right-bottom pixel is filled.
 static BOOL YYCGImageLastPixelFilled(CGImageRef image) {
     if (!image) return NO;
@@ -262,22 +278,18 @@ static void URLInBlackListAdd(NSURL *url) {
 
 - (void)dealloc {
     [_lock lock];
-#ifndef YY_TARGET_IS_EXTENSION
     if (_taskID != UIBackgroundTaskInvalid) {
-        [[UIApplication sharedApplication] endBackgroundTask:_taskID];
+        [_YYSharedApplication() endBackgroundTask:_taskID];
         _taskID = UIBackgroundTaskInvalid;
     }
-#endif
     if ([self isExecuting]) {
         self.cancelled = YES;
         self.finished = YES;
         if (_connection) {
             [_connection cancel];
-#ifndef YY_TARGET_IS_EXTENSION
             if (![_request.URL isFileURL] && (_options & YYWebImageOptionShowNetworkActivity)) {
                 [YYWebImageManager decrementNetworkActivityCount];
             }
-#endif
         }
         if (_completion) {
             @autoreleasepool {
@@ -289,14 +301,12 @@ static void URLInBlackListAdd(NSURL *url) {
 }
 
 - (void)_endBackgroundTask {
-#ifndef YY_TARGET_IS_EXTENSION
     [_lock lock];
     if (_taskID != UIBackgroundTaskInvalid) {
-        [[UIApplication sharedApplication] endBackgroundTask:_taskID];
+        [_YYSharedApplication() endBackgroundTask:_taskID];
         _taskID = UIBackgroundTaskInvalid;
     }
     [_lock unlock];
-#endif
 }
 
 #pragma mark - Runs in operation thread
@@ -750,11 +760,10 @@ static void URLInBlackListAdd(NSURL *url) {
             } else {
                 self.executing = YES;
                 [self performSelector:@selector(_startOperation) onThread:[[self class] _networkThread] withObject:nil waitUntilDone:NO modes:@[NSDefaultRunLoopMode]];
-#ifndef YY_TARGET_IS_EXTENSION
-                if (_options & YYWebImageOptionAllowBackgroundTask) {
+                if ((_options & YYWebImageOptionAllowBackgroundTask) && _YYSharedApplication()) {
                     __weak __typeof__ (self) _self = self;
                     if (_taskID == UIBackgroundTaskInvalid) {
-                        _taskID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+                        _taskID = [_YYSharedApplication() beginBackgroundTaskWithExpirationHandler:^{
                             __strong __typeof (_self) self = _self;
                             if (self) {
                                 [self cancel];
@@ -763,7 +772,6 @@ static void URLInBlackListAdd(NSURL *url) {
                         }];
                     }
                 }
-#endif
             }
         }
         [_lock unlock];
