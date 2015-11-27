@@ -33,11 +33,11 @@ static UIApplication *_YYSharedApplication() {
 }
 
 
-@interface _YYUIApplicationNetworkIndicatorInfo : NSObject
+@interface _YYWebImageApplicationNetworkIndicatorInfo : NSObject
 @property (nonatomic, assign) NSInteger count;
 @property (nonatomic, strong) NSTimer *timer;
 @end
-@implementation _YYUIApplicationNetworkIndicatorInfo
+@implementation _YYWebImageApplicationNetworkIndicatorInfo
 @end
 
 @implementation YYWebImageManager
@@ -121,11 +121,11 @@ static UIApplication *_YYSharedApplication() {
 
 #pragma mark Network Indicator
 
-+ (_YYUIApplicationNetworkIndicatorInfo *)_networkIndicatorInfo {
++ (_YYWebImageApplicationNetworkIndicatorInfo *)_networkIndicatorInfo {
     return objc_getAssociatedObject(self, @selector(_networkIndicatorInfo));
 }
 
-+ (void)_setNetworkIndicatorInfo:(_YYUIApplicationNetworkIndicatorInfo *)info {
++ (void)_setNetworkIndicatorInfo:(_YYWebImageApplicationNetworkIndicatorInfo *)info {
     objc_setAssociatedObject(self, @selector(_networkIndicatorInfo), info, OBJC_ASSOCIATION_RETAIN);
 }
 
@@ -144,9 +144,9 @@ static UIApplication *_YYSharedApplication() {
     if (!_YYSharedApplication()) return;
     
     void (^block)() = ^{
-        _YYUIApplicationNetworkIndicatorInfo *info = [self _networkIndicatorInfo];
+        _YYWebImageApplicationNetworkIndicatorInfo *info = [self _networkIndicatorInfo];
         if (!info) {
-            info = [_YYUIApplicationNetworkIndicatorInfo new];
+            info = [_YYWebImageApplicationNetworkIndicatorInfo new];
             [self _setNetworkIndicatorInfo:info];
         }
         NSInteger count = info.count;
@@ -172,7 +172,7 @@ static UIApplication *_YYSharedApplication() {
 }
 
 + (NSInteger)currentNetworkActivityCount {
-    _YYUIApplicationNetworkIndicatorInfo *info = [self _networkIndicatorInfo];
+    _YYWebImageApplicationNetworkIndicatorInfo *info = [self _networkIndicatorInfo];
     return info.count;
 }
 
