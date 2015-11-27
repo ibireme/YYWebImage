@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name         = 'YYWebImage'
   s.summary      = 'Asynchronous image loading framework.'
-  s.version      = '0.9.7'
+  s.version      = '0.9.8'
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.authors      = { 'ibireme' => 'ibireme@gmail.com' }
   s.social_media_url = 'http://blog.ibireme.com'
