@@ -68,7 +68,7 @@ static NSString *_YYNSStringMD5(NSString *string) {
         __strong typeof(_self) self = _self;
         if (!self) return;
         dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER);
-        [self _trimToCost:self.countLimit];
+        [self _trimToCost:self.costLimit];
         [self _trimToCount:self.countLimit];
         [self _trimToAge:self.ageLimit];
         [self _trimToFreeDiskSpace:self.freeDiskSpaceLimit];
