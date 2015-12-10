@@ -11,6 +11,7 @@
 
 #import "YYDiskCache.h"
 #import "YYKVStorage.h"
+#import <libkern/OSAtomic.h>
 #import <CommonCrypto/CommonCrypto.h>
 #import <objc/runtime.h>
 #import <time.h>
@@ -44,6 +45,36 @@ static NSString *_YYNSStringMD5(NSString *string) {
                 result[12], result[13], result[14], result[15]
             ];
 }
+
+/// weak reference for all instances
+static NSMapTable *_globalInstances;
+static OSSpinLock _globalInstancesLock;
+
+static void _YYDiskCacheInitGlobal() {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _globalInstancesLock = OS_SPINLOCK_INIT;
+        _globalInstances = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:0];
+    });
+}
+
+static YYDiskCache *_YYDiskCacheGetGlobal(NSString *path) {
+    if (path.length == 0) return nil;
+    _YYDiskCacheInitGlobal();
+    OSSpinLockLock(&_globalInstancesLock);
+    id cache = [_globalInstances objectForKey:path];
+    OSSpinLockUnlock(&_globalInstancesLock);
+    return cache;
+}
+
+static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
+    if (cache.path.length == 0) return;
+    _YYDiskCacheInitGlobal();
+    OSSpinLockLock(&_globalInstancesLock);
+    [_globalInstances setObject:cache forKey:cache.path];
+    OSSpinLockUnlock(&_globalInstancesLock);
+}
+
 
 
 @implementation YYDiskCache {
@@ -135,6 +166,9 @@ static NSString *_YYNSStringMD5(NSString *string) {
     self = [super init];
     if (!self) return nil;
     
+    YYDiskCache *globalCache = _YYDiskCacheGetGlobal(path);
+    if (globalCache) return globalCache;
+    
     YYKVStorageType type;
     if (threshold == 0) {
         type = YYKVStorageTypeFile;
@@ -159,6 +193,7 @@ static NSString *_YYNSStringMD5(NSString *string) {
     _autoTrimInterval = 60;
     
     [self _trimRecursively];
+    _YYDiskCacheSetGlobal(self);
     return self;
 }
 

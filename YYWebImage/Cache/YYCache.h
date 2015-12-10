@@ -55,7 +55,6 @@ FOUNDATION_EXPORT const unsigned char YYCacheVersionString[];
      the app's caches dictionary for disk cache. Once initialized you should not 
      read and write to this directory.
  @result A new cache object, or nil if an error occurs.
- @warning Multiple instances with the same name will make the storage unstable.
  */
 - (instancetype)initWithName:(NSString *)name;
 
@@ -66,7 +65,6 @@ FOUNDATION_EXPORT const unsigned char YYCacheVersionString[];
  @param path  Full path of a directory in which the cache will write data.
      Once initialized you should not read and write to this directory.
  @result A new cache object, or nil if an error occurs.
- @warning Multiple instances with the same path will make the storage unstable.
  */
 - (instancetype)initWithPath:(NSString *)path NS_DESIGNATED_INITIALIZER;
 
