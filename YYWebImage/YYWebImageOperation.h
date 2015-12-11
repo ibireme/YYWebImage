@@ -28,10 +28,10 @@
  operation is started, it will:
  
      1. Get the image from the cache, if exist, return it with `completion` block.
-     2. Start an URL connection to fetch image from the request, revoke the `progress`
-        to notify request progress (and revoke `completion` block to return the 
+     2. Start an URL connection to fetch image from the request, invoke the `progress`
+        to notify request progress (and invoke `completion` block to return the 
         progressive image if enabled by progressive option).
-     3. Process the image by revoke the `transform` block.
+     3. Process the image by invoke the `transform` block.
      4. Put the image to cache and return it with `completion` block.
  
  */
