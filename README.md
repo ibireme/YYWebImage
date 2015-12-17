@@ -129,7 +129,7 @@ This library requires a deployment target of iOS 6.0 or greater.
 
 License
 ==============
-YYImage is provided under the MIT license. See LICENSE file for details.
+YYWebImage is provided under the MIT license. See LICENSE file for details.
 
 
 <br/><br/>
