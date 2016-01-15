@@ -21,13 +21,12 @@ See these project for more information.
 Features
 ==============
 - Asynchronous image load from remote or local URL.
-- Animated WebP, APNG, GIF support.
+- Animated WebP, APNG, GIF support (dynamic buffer, lower memory usage).
 - Baseline/progressive/interlaced image decode support.
 - Image loading category for UIImageView, UIButton, MKAnnotationView and CALayer.
 - Image effect: blur, round corner, resize, color tint, crop, rotate and more.
 - High performance memory and disk image cache.
 - High performance image loader to avoid main thread blocked.
-- Dynamic memory buffer for lower memory usage when display animated image.
 - Fully documented.
 
 Usage
@@ -171,13 +170,12 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 特性
 ==============
 - 异步的图片加载，支持 HTTP 和本地文件。
-- 支持 GIF、APNG、WebP 动画。
+- 支持 GIF、APNG、WebP 动画（动态缓存，低内存占用）。
 - 支持逐行扫描、隔行扫描、渐进式图像加载。
 - UIImageView、UIButton、MKAnnotationView、CALayer 的 Category 方法支持。
 - 常见图片处理：模糊、圆角、大小调整、裁切、旋转、色调等。
 - 高性能的内存和磁盘缓存。
 - 高性能的图片设置方式，以避免主线程阻塞。
-- 高效的动态内存缓存管理，以保证高性能低内存的动画播放。
 - 每个类和方法都有完善的文档注释。
 
 用法
@@ -235,17 +233,17 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 ###图片缓存
     YYImageCache *cache = [YYWebImageManager sharedManager].cache;
     
-    // get cache capacity
+    // 获取缓存大小
     cache.memoryCache.totalCost;
     cache.memoryCache.totalCount;
     cache.diskCache.totalCost;
     cache.diskCache.totalCount;
     
-    // clear cache
+    // 清空缓存
     [cache.memoryCache removeAllObjects];
     [cache.diskCache removeAllObjects];
     
-    // clear disk cache with progress
+    // 清空磁盘缓存，带进度回调
     [cache.diskCache removeAllObjectsWithProgressBlock:^(int removedCount, int totalCount) {
         // progress
     } endBlock:^(BOOL error) {
