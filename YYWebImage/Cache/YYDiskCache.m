@@ -11,13 +11,12 @@
 
 #import "YYDiskCache.h"
 #import "YYKVStorage.h"
-#import <libkern/OSAtomic.h>
 #import <CommonCrypto/CommonCrypto.h>
 #import <objc/runtime.h>
 #import <time.h>
 
-#define Lock() dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER)
-#define Unlock() dispatch_semaphore_signal(_lock)
+#define Lock() dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER)
+#define Unlock() dispatch_semaphore_signal(self->_lock)
 
 static const int extended_data_key;
 
@@ -48,12 +47,12 @@ static NSString *_YYNSStringMD5(NSString *string) {
 
 /// weak reference for all instances
 static NSMapTable *_globalInstances;
-static OSSpinLock _globalInstancesLock;
+static dispatch_semaphore_t _globalInstancesLock;
 
 static void _YYDiskCacheInitGlobal() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _globalInstancesLock = OS_SPINLOCK_INIT;
+        _globalInstancesLock = dispatch_semaphore_create(1);
         _globalInstances = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:0];
     });
 }
@@ -61,18 +60,18 @@ static void _YYDiskCacheInitGlobal() {
 static YYDiskCache *_YYDiskCacheGetGlobal(NSString *path) {
     if (path.length == 0) return nil;
     _YYDiskCacheInitGlobal();
-    OSSpinLockLock(&_globalInstancesLock);
+    dispatch_semaphore_wait(_globalInstancesLock, DISPATCH_TIME_FOREVER);
     id cache = [_globalInstances objectForKey:path];
-    OSSpinLockUnlock(&_globalInstancesLock);
+    dispatch_semaphore_signal(_globalInstancesLock);
     return cache;
 }
 
 static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     if (cache.path.length == 0) return;
     _YYDiskCacheInitGlobal();
-    OSSpinLockLock(&_globalInstancesLock);
+    dispatch_semaphore_wait(_globalInstancesLock, DISPATCH_TIME_FOREVER);
     [_globalInstances setObject:cache forKey:cache.path];
-    OSSpinLockUnlock(&_globalInstancesLock);
+    dispatch_semaphore_signal(_globalInstancesLock);
 }
 
 
@@ -98,12 +97,12 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     dispatch_async(_queue, ^{
         __strong typeof(_self) self = _self;
         if (!self) return;
-        dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER);
+        Lock();
         [self _trimToCost:self.costLimit];
         [self _trimToCount:self.countLimit];
         [self _trimToAge:self.ageLimit];
         [self _trimToFreeDiskSpace:self.freeDiskSpaceLimit];
-        dispatch_semaphore_signal(self->_lock);
+        Unlock();
     });
 }
 
@@ -330,9 +329,9 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
             if (end) end(YES);
             return;
         }
-        dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER);
+        Lock();
         [_kv removeAllItemsWithProgressBlock:progress endBlock:end];
-        dispatch_semaphore_signal(self->_lock);
+        Unlock();
     });
 }
 

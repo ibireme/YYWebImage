@@ -10,7 +10,6 @@
 //
 
 #import "YYImage.h"
-#import <libkern/OSAtomic.h>
 
 /**
  An array of NSNumber objects, shows the best order for path scale search.
@@ -88,7 +87,7 @@ static CGFloat _NSStringPathScale(NSString *string) {
 @implementation YYImage {
     YYImageDecoder *_decoder;
     NSArray *_preloadedFrames;
-    OSSpinLock _preloadedLock;
+    dispatch_semaphore_t _preloadedLock;
     NSUInteger _bytesPerFrame;
 }
 
@@ -145,7 +144,7 @@ static CGFloat _NSStringPathScale(NSString *string) {
 - (instancetype)initWithData:(NSData *)data scale:(CGFloat)scale {
     if (data.length == 0) return nil;
     if (scale <= 0) scale = [UIScreen mainScreen].scale;
-    _preloadedLock = OS_SPINLOCK_INIT;
+    _preloadedLock = dispatch_semaphore_create(1);
     @autoreleasepool {
         YYImageDecoder *decoder = [YYImageDecoder decoderWithData:data scale:scale];
         YYImageFrame *frame = [decoder frameAtIndex:0 decodeForDisplay:YES];
@@ -180,13 +179,13 @@ static CGFloat _NSStringPathScale(NSString *string) {
                     [frames addObject:[NSNull null]];
                 }
             }
-            OSSpinLockLock(&_preloadedLock);
+            dispatch_semaphore_wait(_preloadedLock, DISPATCH_TIME_FOREVER);
             _preloadedFrames = frames;
-            OSSpinLockUnlock(&_preloadedLock);
+            dispatch_semaphore_signal(_preloadedLock);
         } else {
-            OSSpinLockLock(&_preloadedLock);
+            dispatch_semaphore_wait(_preloadedLock, DISPATCH_TIME_FOREVER);
             _preloadedFrames = nil;
-            OSSpinLockUnlock(&_preloadedLock);
+            dispatch_semaphore_signal(_preloadedLock);
         }
     }
 }
@@ -229,9 +228,9 @@ static CGFloat _NSStringPathScale(NSString *string) {
 
 - (UIImage *)animatedImageFrameAtIndex:(NSUInteger)index {
     if (index >= _decoder.frameCount) return nil;
-    OSSpinLockLock(&_preloadedLock);
+    dispatch_semaphore_wait(_preloadedLock, DISPATCH_TIME_FOREVER);
     UIImage *image = _preloadedFrames[index];
-    OSSpinLockUnlock(&_preloadedLock);
+    dispatch_semaphore_signal(_preloadedLock);
     if (image) return image == (id)[NSNull null] ? nil : image;
     return [_decoder frameAtIndex:index decodeForDisplay:YES].image;
 }

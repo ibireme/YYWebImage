@@ -145,7 +145,7 @@
  
  @return A new cache object, or nil if an error occurs.
  
- @warning If the cache instance for the specified path already exists in memory, 
+ @warning If the cache instance for the specified path already exists in memory,
      this method will return it directly, instead of creating a new instance.
  */
 - (instancetype)initWithPath:(NSString *)path;
@@ -165,7 +165,7 @@
  
  @return A new cache object, or nil if an error occurs.
  
- @warning If the cache instance for the specified path already exists in memory, 
+ @warning If the cache instance for the specified path already exists in memory,
      this method will return it directly, instead of creating a new instance.
  */
 - (instancetype)initWithPath:(NSString *)path
