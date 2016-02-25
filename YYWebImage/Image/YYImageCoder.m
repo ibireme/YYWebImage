@@ -1399,7 +1399,8 @@ CGImageRef YYCGImageCreateWithWebPData(CFDataRef webpData,
     config.output.u.RGBA.stride = (int)bytesPerRow;
     config.output.u.RGBA.size = destLength;
     
-    if (WebPDecode(payload, payloadSize, &config) != VP8_STATUS_OK) goto fail;
+    VP8StatusCode result = WebPDecode(payload, payloadSize, &config);
+    if ((result != VP8_STATUS_OK) && (result != VP8_STATUS_NOT_ENOUGH_DATA)) goto fail;
     
     if (iter.x_offset != 0 || iter.y_offset != 0) {
         void *tmp = calloc(1, destLength);
@@ -2150,7 +2151,8 @@ CGImageRef YYCGImageCreateWithWebPData(CFDataRef webpData,
         config.output.u.RGBA.rgba = pixels;
         config.output.u.RGBA.stride = (int)bytesPerRow;
         config.output.u.RGBA.size = length;
-        if (WebPDecode(payload, payloadSize, &config) != VP8_STATUS_OK) { // decode
+        VP8StatusCode result = WebPDecode(payload, payloadSize, &config); // decode
+        if ((result != VP8_STATUS_OK) && (result != VP8_STATUS_NOT_ENOUGH_DATA)) {
             WebPDemuxReleaseIterator(&iter);
             free(pixels);
             return NULL;
@@ -2724,7 +2726,7 @@ CGImageRef YYCGImageCreateWithWebPData(CFDataRef webpData,
 }
 
 + (NSData *)encodeImageWithDecoder:(YYImageDecoder *)decoder type:(YYImageType)type quality:(CGFloat)quality {
-    if (!decoder || !decoder.frameCount == 0) return nil;
+    if (!decoder || decoder.frameCount == 0) return nil;
     YYImageEncoder *encoder = [[YYImageEncoder alloc] initWithType:type];
     encoder.quality = quality;
     for (int i = 0; i < decoder.frameCount; i++) {

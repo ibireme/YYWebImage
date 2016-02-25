@@ -42,6 +42,14 @@
     return self;
 }
 
++ (instancetype)cacheWithName:(NSString *)name {
+	return [[YYCache alloc] initWithName:name];
+}
+
++ (instancetype)cacheWithPath:(NSString *)path {
+    return [[YYCache alloc] initWithPath:path];
+}
+
 - (BOOL)containsObjectForKey:(NSString *)key {
     return [_memoryCache containsObjectForKey:key] || [_diskCache containsObjectForKey:key];
 }

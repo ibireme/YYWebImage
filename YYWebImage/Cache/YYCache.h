@@ -68,6 +68,29 @@ FOUNDATION_EXPORT const unsigned char YYCacheVersionString[];
  */
 - (instancetype)initWithPath:(NSString *)path NS_DESIGNATED_INITIALIZER;
 
+/**
+ Convenience Initializers
+ Create a new instance with the specified name.
+ Multiple instances with the same name will make the cache unstable.
+ 
+ @param name  The name of the cache. It will create a dictionary with the name in
+     the app's caches dictionary for disk cache. Once initialized you should not 
+     read and write to this directory.
+ @result A new cache object, or nil if an error occurs.
+ */
++ (instancetype)cacheWithName:(NSString *)name;
+
+/**
+ Convenience Initializers
+ Create a new instance with the specified name.
+ Multiple instances with the same name will make the cache unstable.
+ 
+ @param path  Full path of a directory in which the cache will write data.
+     Once initialized you should not read and write to this directory.
+ @result A new cache object, or nil if an error occurs.
+ */
++ (instancetype)cacheWithPath:(NSString *)path;
+
 - (instancetype)init UNAVAILABLE_ATTRIBUTE;
 + (instancetype)new UNAVAILABLE_ATTRIBUTE;
 
