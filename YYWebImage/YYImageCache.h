@@ -13,6 +13,8 @@
 
 @class YYMemoryCache, YYDiskCache;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /// Image cache type
 typedef NS_OPTIONS(NSUInteger, YYImageCacheType) {
     /// No value.
@@ -52,7 +54,7 @@ typedef NS_OPTIONS(NSUInteger, YYImageCacheType) {
 ///=============================================================================
 
 /** The name of the cache. Default is nil. */
-@property (copy) NSString *name;
+@property (nullable, copy) NSString *name;
 
 /** The underlying memory cache. see `YYMemoryCache` for more information.*/
 @property (strong, readonly) YYMemoryCache *memoryCache;
@@ -216,3 +218,5 @@ typedef NS_OPTIONS(NSUInteger, YYImageCacheType) {
 - (void)getImageDataForKey:(NSString *)key withBlock:(void(^)(NSData *imageData))block;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -18,13 +18,13 @@
 #import "YYWebImageManager.h"
 #endif
 
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  Web image methods for CALayer.
  It will set image to layer.contents.
  */
 @interface CALayer (YYWebImage)
-
 
 #pragma mark - image
 
@@ -35,7 +35,7 @@
  operation and create a new request operation to fetch image. Set nil to clear
  the image and image URL.
  */
-@property (nonatomic, strong) NSURL *yy_imageURL;
+@property (nullable, nonatomic, strong) NSURL *yy_imageURL;
 
 /**
  Set the view's `image` with a specified URL.
@@ -43,7 +43,7 @@
  @param imageURL    The image url (remote or local file path).
  @param placeholder The image to be set initially, until the image request finishes.
  */
-- (void)yy_setImageWithURL:(NSURL *)imageURL placeholder:(UIImage *)placeholder;
+- (void)yy_setImageWithURL:(nullable NSURL *)imageURL placeholder:(nullable UIImage *)placeholder;
 
 /**
  Set the view's `image` with a specified URL.
@@ -51,7 +51,7 @@
  @param imageURL The image url (remote or local file path).
  @param options  The options to use when request the image.
  */
-- (void)yy_setImageWithURL:(NSURL *)imageURL options:(YYWebImageOptions)options;
+- (void)yy_setImageWithURL:(nullable NSURL *)imageURL options:(YYWebImageOptions)options;
 
 /**
  Set the view's `image` with a specified URL.
@@ -61,10 +61,10 @@
  @param options     The options to use when request the image.
  @param completion  The block invoked (on main thread) when image request completed.
  */
-- (void)yy_setImageWithURL:(NSURL *)imageURL
-               placeholder:(UIImage *)placeholder
+- (void)yy_setImageWithURL:(nullable NSURL *)imageURL
+               placeholder:(nullable UIImage *)placeholder
                    options:(YYWebImageOptions)options
-                completion:(YYWebImageCompletionBlock)completion;
+                completion:(nullable YYWebImageCompletionBlock)completion;
 
 /**
  Set the view's `image` with a specified URL.
@@ -76,12 +76,12 @@
  @param transform   The block invoked (on background thread) to do additional image process.
  @param completion  The block invoked (on main thread) when image request completed.
  */
-- (void)yy_setImageWithURL:(NSURL *)imageURL
-               placeholder:(UIImage *)placeholder
+- (void)yy_setImageWithURL:(nullable NSURL *)imageURL
+               placeholder:(nullable UIImage *)placeholder
                    options:(YYWebImageOptions)options
-                  progress:(YYWebImageProgressBlock)progress
-                 transform:(YYWebImageTransformBlock)transform
-                completion:(YYWebImageCompletionBlock)completion;
+                  progress:(nullable YYWebImageProgressBlock)progress
+                 transform:(nullable YYWebImageTransformBlock)transform
+                completion:(nullable YYWebImageCompletionBlock)completion;
 
 /**
  Set the view's `image` with a specified URL.
@@ -94,13 +94,13 @@
  @param transform   The block invoked (on background thread) to do additional image process.
  @param completion  The block invoked (on main thread) when image request completed.
  */
-- (void)yy_setImageWithURL:(NSURL *)imageURL
-               placeholder:(UIImage *)placeholder
+- (void)yy_setImageWithURL:(nullable NSURL *)imageURL
+               placeholder:(nullable UIImage *)placeholder
                    options:(YYWebImageOptions)options
-                   manager:(YYWebImageManager *)manager
-                  progress:(YYWebImageProgressBlock)progress
-                 transform:(YYWebImageTransformBlock)transform
-                completion:(YYWebImageCompletionBlock)completion;
+                   manager:(nullable YYWebImageManager *)manager
+                  progress:(nullable YYWebImageProgressBlock)progress
+                 transform:(nullable YYWebImageTransformBlock)transform
+                completion:(nullable YYWebImageCompletionBlock)completion;
 
 /**
  Cancel the current image request.
@@ -108,3 +108,5 @@
 - (void)yy_cancelCurrentImageRequest;
 
 @end
+
+NS_ASSUME_NONNULL_END

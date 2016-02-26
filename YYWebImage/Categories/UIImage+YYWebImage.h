@@ -11,6 +11,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  Provide some commen method for `UIImage`.
  Image process is based on CoreGraphic and vImage.
@@ -38,14 +40,14 @@
  
  @return A new image created from GIF, or nil when an error occurs.
  */
-+ (UIImage *)yy_imageWithSmallGIFData:(NSData *)data scale:(CGFloat)scale;
++ (nullable UIImage *)yy_imageWithSmallGIFData:(NSData *)data scale:(CGFloat)scale;
 
 /**
  Create and return a 1x1 point size image with the given color.
  
  @param color  The color.
  */
-+ (UIImage *)yy_imageWithColor:(UIColor *)color;
++ (nullable UIImage *)yy_imageWithColor:(UIColor *)color;
 
 /**
  Create and return a pure color image with the given color and size.
@@ -53,7 +55,7 @@
  @param color  The color.
  @param size   New image's type.
  */
-+ (UIImage *)yy_imageWithColor:(UIColor *)color size:(CGSize)size;
++ (nullable UIImage *)yy_imageWithColor:(UIColor *)color size:(CGSize)size;
 
 /**
  Create and return an image with custom draw code.
@@ -63,7 +65,7 @@
  
  @return The new image.
  */
-+ (UIImage *)yy_imageWithSize:(CGSize)size drawBlock:(void (^)(CGContextRef context))drawBlock;
++ (nullable UIImage *)yy_imageWithSize:(CGSize)size drawBlock:(void (^)(CGContextRef context))drawBlock;
 
 #pragma mark - Image Info
 ///=============================================================================
@@ -107,7 +109,7 @@
  
  @return      The new image with the given size.
  */
-- (UIImage *)yy_imageByResizeToSize:(CGSize)size;
+- (nullable UIImage *)yy_imageByResizeToSize:(CGSize)size;
 
 /**
  Returns a new image which is scaled from this image.
@@ -119,7 +121,7 @@
  
  @return The new image with the given size.
  */
-- (UIImage *)yy_imageByResizeToSize:(CGSize)size contentMode:(UIViewContentMode)contentMode;
+- (nullable UIImage *)yy_imageByResizeToSize:(CGSize)size contentMode:(UIViewContentMode)contentMode;
 
 /**
  Returns a new image which is cropped from this image.
@@ -128,7 +130,7 @@
  
  @return      The new image, or nil if an error occurs.
  */
-- (UIImage *)yy_imageByCropToRect:(CGRect)rect;
+- (nullable UIImage *)yy_imageByCropToRect:(CGRect)rect;
 
 /**
  Returns a new image which is edge inset from this image.
@@ -139,7 +141,7 @@
  
  @return        The new image, or nil if an error occurs.
  */
-- (UIImage *)yy_imageByInsetEdge:(UIEdgeInsets)insets withColor:(UIColor *)color;
+- (nullable UIImage *)yy_imageByInsetEdge:(UIEdgeInsets)insets withColor:(nullable UIColor *)color;
 
 /**
  Rounds a new image with a given corner size.
@@ -148,7 +150,7 @@
                 rectangle's width or height are clamped appropriately to half
                 the width or height.
  */
-- (UIImage *)yy_imageByRoundCornerRadius:(CGFloat)radius;
+- (nullable UIImage *)yy_imageByRoundCornerRadius:(CGFloat)radius;
 
 /**
  Rounds a new image with a given corner size.
@@ -163,9 +165,9 @@
  
  @param borderColor  The border stroke color. nil means clear color.
  */
-- (UIImage *)yy_imageByRoundCornerRadius:(CGFloat)radius
+- (nullable UIImage *)yy_imageByRoundCornerRadius:(CGFloat)radius
                              borderWidth:(CGFloat)borderWidth
-                             borderColor:(UIColor *)borderColor;
+                             borderColor:(nullable UIColor *)borderColor;
 
 /**
  Rounds a new image with a given corner size.
@@ -186,11 +188,11 @@
  
  @param borderLineJoin The border line join.
  */
-- (UIImage *)yy_imageByRoundCornerRadius:(CGFloat)radius
-                                 corners:(UIRectCorner)corners
-                             borderWidth:(CGFloat)borderWidth
-                             borderColor:(UIColor *)borderColor
-                          borderLineJoin:(CGLineJoin)borderLineJoin;
+- (nullable UIImage *)yy_imageByRoundCornerRadius:(CGFloat)radius
+                                          corners:(UIRectCorner)corners
+                                      borderWidth:(CGFloat)borderWidth
+                                      borderColor:(nullable UIColor *)borderColor
+                                   borderLineJoin:(CGLineJoin)borderLineJoin;
 
 /**
  Returns a new rotated image (relative to the center).
@@ -200,34 +202,34 @@
  @param fitSize   YES: new image's size is extend to fit all content.
                   NO: image's size will not change, content may be clipped.
  */
-- (UIImage *)yy_imageByRotate:(CGFloat)radians fitSize:(BOOL)fitSize;
+- (nullable UIImage *)yy_imageByRotate:(CGFloat)radians fitSize:(BOOL)fitSize;
 
 /**
  Returns a new image rotated counterclockwise by a quarter‑turn (90°). ⤺
  The width and height will be exchanged.
  */
-- (UIImage *)yy_imageByRotateLeft90;
+- (nullable UIImage *)yy_imageByRotateLeft90;
 
 /**
  Returns a new image rotated clockwise by a quarter‑turn (90°). ⤼
  The width and height will be exchanged.
  */
-- (UIImage *)yy_imageByRotateRight90;
+- (nullable UIImage *)yy_imageByRotateRight90;
 
 /**
  Returns a new image rotated 180° . ↻
  */
-- (UIImage *)yy_imageByRotate180;
+- (nullable UIImage *)yy_imageByRotate180;
 
 /**
  Returns a vertically flipped image. ⥯
  */
-- (UIImage *)yy_imageByFlipVertical;
+- (nullable UIImage *)yy_imageByFlipVertical;
 
 /**
  Returns a horizontally flipped image. ⇋
  */
-- (UIImage *)yy_imageByFlipHorizontal;
+- (nullable UIImage *)yy_imageByFlipHorizontal;
 
 
 #pragma mark - Image Effect
@@ -240,42 +242,42 @@
  
  @param color  The color.
  */
-- (UIImage *)yy_imageByTintColor:(UIColor *)color;
+- (nullable UIImage *)yy_imageByTintColor:(UIColor *)color;
 
 /**
  Returns a grayscaled image.
  */
-- (UIImage *)yy_imageByGrayscale;
+- (nullable UIImage *)yy_imageByGrayscale;
 
 /**
  Applies a blur effect to this image. Suitable for blur any content.
  */
-- (UIImage *)yy_imageByBlurSoft;
+- (nullable UIImage *)yy_imageByBlurSoft;
 
 /**
  Applies a blur effect to this image. Suitable for blur any content except pure white.
  (same as iOS Control Panel)
  */
-- (UIImage *)yy_imageByBlurLight;
+- (nullable UIImage *)yy_imageByBlurLight;
 
 /**
  Applies a blur effect to this image. Suitable for displaying black text.
  (same as iOS Navigation Bar White)
  */
-- (UIImage *)yy_imageByBlurExtraLight;
+- (nullable UIImage *)yy_imageByBlurExtraLight;
 
 /**
  Applies a blur effect to this image. Suitable for displaying white text.
  (same as iOS Notification Center)
  */
-- (UIImage *)yy_imageByBlurDark;
+- (nullable UIImage *)yy_imageByBlurDark;
 
 /**
  Applies a blur and tint color to this image.
  
  @param tintColor  The tint color.
  */
-- (UIImage *)yy_imageByBlurWithTint:(UIColor *)tintColor;
+- (nullable UIImage *)yy_imageByBlurWithTint:(UIColor *)tintColor;
 
 /**
  Applies a blur, tint color, and saturation adjustment to this image,
@@ -303,10 +305,12 @@
  @return               image with effect, or nil if an error occurs (e.g. no
                        enough memory).
  */
-- (UIImage *)yy_imageByBlurRadius:(CGFloat)blurRadius
-                        tintColor:(UIColor *)tintColor
-                         tintMode:(CGBlendMode)tintBlendMode
-                       saturation:(CGFloat)saturation
-                        maskImage:(UIImage *)maskImage;
+- (nullable UIImage *)yy_imageByBlurRadius:(CGFloat)blurRadius
+                                 tintColor:(nullable UIColor *)tintColor
+                                  tintMode:(CGBlendMode)tintBlendMode
+                                saturation:(CGFloat)saturation
+                                 maskImage:(nullable UIImage *)maskImage;
 
 @end
+
+NS_ASSUME_NONNULL_END
