@@ -258,11 +258,11 @@
 				ABC423B11BE324F000703518 /* Categories */,
 				ABC423C91BE324F000703518 /* YYImageCache.h */,
 				ABC423CA1BE324F000703518 /* YYImageCache.m */,
-				ABC423CB1BE324F000703518 /* YYWebImage.h */,
 				ABC423CC1BE324F000703518 /* YYWebImageManager.h */,
 				ABC423CD1BE324F000703518 /* YYWebImageManager.m */,
 				ABC423CE1BE324F000703518 /* YYWebImageOperation.h */,
 				ABC423CF1BE324F000703518 /* YYWebImageOperation.m */,
+				ABC423CB1BE324F000703518 /* YYWebImage.h */,
 			);
 			name = YYWebImage;
 			path = ../YYWebImage;

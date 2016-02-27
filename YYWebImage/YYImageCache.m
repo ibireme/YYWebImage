@@ -100,7 +100,7 @@ static inline dispatch_queue_t YYImageCacheDecodeQueue() {
 
 - (instancetype)init {
     @throw [NSException exceptionWithName:@"YYImageCache init error" reason:@"YYImageCache must be initialized with a path. Use 'initWithPath:' instead." userInfo:nil];
-    return [self initWithPath:nil];
+    return [self initWithPath:@""];
 }
 
 - (instancetype)initWithPath:(NSString *)path {

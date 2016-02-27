@@ -192,7 +192,7 @@
 
 - (void)reload {
     [[YYImageCache sharedCache].memoryCache removeAllObjects];
-    [[YYImageCache sharedCache].diskCache removeAllObjectsWithBlock:nil];
+    [[YYImageCache sharedCache].diskCache removeAllObjectsWithBlock:^{}];
     [self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.1];
 }
 
