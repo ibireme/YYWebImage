@@ -620,7 +620,7 @@ typedef NS_ENUM(NSUInteger, YYAnimatedImageType) {
     _runloopMode = runloopMode.copy;
 }
 
-#pragma mark - Overrice NSObject(NSKeyValueObservingCustomization)
+#pragma mark - Override NSObject(NSKeyValueObservingCustomization)
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
     if ([key isEqualToString:@"currentAnimatedImageIndex"]) {
