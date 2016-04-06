@@ -11,6 +11,7 @@
 
 #import "YYDiskCache.h"
 #import "YYKVStorage.h"
+#import <UIKit/UIKit.h>
 #import <CommonCrypto/CommonCrypto.h>
 #import <objc/runtime.h>
 #import <time.h>
@@ -149,7 +150,17 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     return filename;
 }
 
+- (void)_appWillBeTerminated {
+    Lock();
+    _kv = nil;
+    Unlock();
+}
+
 #pragma mark - public
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
+}
 
 - (instancetype)init {
     @throw [NSException exceptionWithName:@"YYDiskCache init error" reason:@"YYDiskCache must be initialized with a path. Use 'initWithPath:' or 'initWithPath:inlineThreshold:' instead." userInfo:nil];
@@ -193,6 +204,8 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     
     [self _trimRecursively];
     _YYDiskCacheSetGlobal(self);
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_appWillBeTerminated) name:UIApplicationWillTerminateNotification object:nil];
     return self;
 }
 
@@ -427,6 +440,19 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
 - (NSString *)description {
     if (_name) return [NSString stringWithFormat:@"<%@: %p> (%@:%@)", self.class, self, _name, _path];
     else return [NSString stringWithFormat:@"<%@: %p> (%@)", self.class, self, _path];
+}
+
+- (BOOL)errorLogsEnabled {
+    Lock();
+    BOOL enabled = _kv.errorLogsEnabled;
+    Unlock();
+    return enabled;
+}
+
+- (void)setErrorLogsEnabled:(BOOL)errorLogsEnabled {
+    Lock();
+    _kv.errorLogsEnabled = errorLogsEnabled;
+    Unlock();
 }
 
 @end

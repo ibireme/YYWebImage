@@ -27,6 +27,17 @@ static NSString *const kDataDirectoryName = @"data";
 static NSString *const kTrashDirectoryName = @"trash";
 
 /*
+ File:
+ /path/
+      /manifest.sqlite
+      /manifest.sqlite-shm
+      /manifest.sqlite-wal
+      /data/
+           /e10adc3949ba59abbe56e057f20f883e
+           /e10adc3949ba59abbe56e057f20f883e
+      /trash/
+            /unused_file_or_folder
+ 
  SQL:
  create table if not exists manifest (
     key                 text,
@@ -41,6 +52,22 @@ static NSString *const kTrashDirectoryName = @"trash";
  create index if not exists last_access_time_idx on manifest(last_access_time);
  */
 
+/// Returns nil in App Extension.
+static UIApplication *_YYSharedApplication() {
+    static BOOL isAppExtension = NO;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class cls = NSClassFromString(@"UIApplication");
+        if(!cls || ![cls respondsToSelector:@selector(sharedApplication)]) isAppExtension = YES;
+        if ([[[NSBundle mainBundle] bundlePath] hasSuffix:@".appex"]) isAppExtension = YES;
+    });
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+    return isAppExtension ? nil : [UIApplication performSelector:@selector(sharedApplication)];
+#pragma clang diagnostic pop
+}
+
+
 @implementation YYKVStorageItem
 @end
 
@@ -54,24 +81,13 @@ static NSString *const kTrashDirectoryName = @"trash";
     
     sqlite3 *_db;
     CFMutableDictionaryRef _dbStmtCache;
-    
-    BOOL _invalidated; ///< If YES, then the db should not open again, all read/write should be ignored.
-    BOOL _dbIsClosing; ///< If YES, then the db is during closing.
 }
 
 
 #pragma mark - db
 
 - (BOOL)_dbOpen {
-    BOOL shouldOpen = YES;
-    if (_invalidated) {
-        shouldOpen = NO;
-    } else if (_dbIsClosing) {
-        shouldOpen = NO;
-    } else if (_db){
-        shouldOpen = NO;
-    }
-    if (!shouldOpen) return YES;
+    if (_db) return YES;
     
     int result = sqlite3_open(_dbPath.UTF8String, &_db);
     if (result == SQLITE_OK) {
@@ -80,23 +96,17 @@ static NSString *const kTrashDirectoryName = @"trash";
         _dbStmtCache = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &keyCallbacks, &valueCallbacks);
         return YES;
     } else {
+        _db = NULL;
+        if (_dbStmtCache) CFRelease(_dbStmtCache);
+        _dbStmtCache = NULL;
+        
         NSLog(@"%s line:%d sqlite open failed (%d).", __FUNCTION__, __LINE__, result);
         return NO;
     }
 }
 
 - (BOOL)_dbClose {
-    BOOL needClose = YES;
-    if (!_db) {
-        needClose = NO;
-    } else if (_invalidated) {
-        needClose = NO;
-    } else if (_dbIsClosing) {
-        needClose = NO;
-    } else {
-        _dbIsClosing = YES;
-    }
-    if (!needClose) return YES;
+    if (!_db) return YES;
     
     int  result = 0;
     BOOL retry = NO;
@@ -122,12 +132,11 @@ static NSString *const kTrashDirectoryName = @"trash";
         }
     } while (retry);
     _db = NULL;
-    _dbIsClosing = NO;
     return YES;
 }
 
 - (BOOL)_dbIsReady {
-    return (_db && !_dbIsClosing && !_invalidated);
+    return (_db);
 }
 
 - (BOOL)_dbInitialize {
@@ -580,26 +589,22 @@ static NSString *const kTrashDirectoryName = @"trash";
 #pragma mark - file
 
 - (BOOL)_fileWriteWithName:(NSString *)filename data:(NSData *)data {
-    if (_invalidated) return NO;
     NSString *path = [_dataPath stringByAppendingPathComponent:filename];
     return [data writeToFile:path atomically:NO];
 }
 
 - (NSData *)_fileReadWithName:(NSString *)filename {
-    if (_invalidated) return nil;
     NSString *path = [_dataPath stringByAppendingPathComponent:filename];
     NSData *data = [NSData dataWithContentsOfFile:path];
     return data;
 }
 
 - (BOOL)_fileDeleteWithName:(NSString *)filename {
-    if (_invalidated) return NO;
     NSString *path = [_dataPath stringByAppendingPathComponent:filename];
     return [[NSFileManager defaultManager] removeItemAtPath:path error:NULL];
 }
 
 - (BOOL)_fileMoveAllToTrash {
-    if (_invalidated) return NO;
     CFUUIDRef uuidRef = CFUUIDCreate(NULL);
     CFStringRef uuid = CFUUIDCreateString(NULL, uuidRef);
     CFRelease(uuidRef);
@@ -613,7 +618,6 @@ static NSString *const kTrashDirectoryName = @"trash";
 }
 
 - (void)_fileEmptyTrashInBackground {
-    if (_invalidated) return;
     NSString *trashPath = _trashPath;
     dispatch_queue_t queue = _trashQueue;
     dispatch_async(queue, ^{
@@ -639,10 +643,6 @@ static NSString *const kTrashDirectoryName = @"trash";
     [[NSFileManager defaultManager] removeItemAtPath:[_path stringByAppendingPathComponent:kDBWalFileName] error:nil];
     [self _fileMoveAllToTrash];
     [self _fileEmptyTrashInBackground];
-}
-
-- (void)_appWillBeTerminated {
-    _invalidated = YES;
 }
 
 #pragma mark - public
@@ -698,13 +698,15 @@ static NSString *const kTrashDirectoryName = @"trash";
         return nil;
     }
     [self _fileEmptyTrashInBackground]; // empty the trash if failed at last time
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_appWillBeTerminated) name:UIApplicationWillTerminateNotification object:nil];
     return self;
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
+    UIBackgroundTaskIdentifier taskID = [_YYSharedApplication() beginBackgroundTaskWithExpirationHandler:^{}];
     [self _dbClose];
+    if (taskID != UIBackgroundTaskInvalid) {
+        [_YYSharedApplication() endBackgroundTask:taskID];
+    }
 }
 
 - (BOOL)saveItem:(YYKVStorageItem *)item {
