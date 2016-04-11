@@ -11,6 +11,8 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol YYAnimatedImage;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -79,6 +81,12 @@ NS_ASSUME_NONNULL_BEGIN
  immediately, and may grow back at the right time.
  */
 @property (nonatomic) NSUInteger maxBufferSize;
+
+/**
+ *  A convenience accessor for the getting the animated image that the image view is currently displaying
+ *  If the `image` property does not contain an animated image, this property returns nil.
+ */
+@property (nonatomic, strong, nullable) UIImage<YYAnimatedImage> *animatedImage;
 
 @end
 

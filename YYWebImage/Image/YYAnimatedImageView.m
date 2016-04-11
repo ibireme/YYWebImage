@@ -301,6 +301,20 @@ typedef NS_ENUM(NSUInteger, YYAnimatedImageType) {
     [self imageChanged];
 }
 
+- (void)setAnimatedImage:(UIImage<YYAnimatedImage> *)animatedImage {
+    if (self.image == animatedImage) {
+        return;
+    }
+    [self setImage:animatedImage withType:YYAnimatedImageTypeImage];
+}
+
+- (UIImage<YYAnimatedImage> *)animatedImage {
+    if (![self.image conformsToProtocol:@protocol(YYAnimatedImage)]) {
+        return nil;
+    }
+    return (UIImage<YYAnimatedImage> *)self.image;
+}
+
 - (id)imageForType:(YYAnimatedImageType)type {
     switch (type) {
         case YYAnimatedImageTypeNone: return nil;
