@@ -12,6 +12,7 @@
 #import "YYWebImageManager.h"
 #import "YYImageCache.h"
 #import "YYWebImageOperation.h"
+#import "YYImageCoder.h"
 #import <objc/runtime.h>
 
 #define kNetworkIndicatorDelay (1/30.0)
@@ -67,7 +68,11 @@ static UIApplication *_YYSharedApplication() {
     _cache = cache;
     _queue = queue;
     _timeout = 15.0;
-    _headers = @{ @"Accept" : @"image/webp,image/*;q=0.8" };
+    if (YYImageWebPAvailable()) {
+        _headers = @{ @"Accept" : @"image/webp,image/*;q=0.8" };
+    } else {
+        _headers = @{ @"Accept" : @"image/*;q=0.8" };
+    }
     return self;
 }
 

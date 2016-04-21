@@ -109,14 +109,14 @@ Installation
 2. Add `pod 'YYWebImage'` to your Podfile.
 3. Run `pod install` or `pod update`.
 4. Import \<YYWebImage/YYWebImage.h\>.
-5. Notice: it doesn't include WebP subspec by default, if you want to support WebP format, you may add `pod 'YYImage/WebP'` to your Podfile.
+5. Notice: it doesn't include WebP subspec by default, if you want to support WebP format, you may add `pod 'YYImage/WebP'` to your Podfile. You may call `YYImageWebPAvailable()` to check whether the WebP subspec is installed correctly.
 
 ### Carthage
 
 1. Add `github "ibireme/YYWebImage"` to your Cartfile.
 2. Run `carthage update --platform ios` and add the framework to your project.
 3. Import \<YYWebImage/YYWebImage.h\>.
-4. Notice: carthage framework doesn't include webp component, if you want to support WebP format, use CocoaPods or install manually.
+4. Notice: carthage framework doesn't include webp component, if you want to support WebP format, use CocoaPods or install manually. You may call `YYImageWebPAvailable()` to check whether the WebP library is installed correctly.
 
 ### Manually
 
@@ -259,7 +259,7 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 2. 在 Podfile 中添加 `pod 'YYWebImage'`。
 3. 执行 `pod install` 或 `pod update`。
 4. 导入 \<YYWebImage/YYWebImage.h\>。
-5. 注意：pod 配置并没有包含 WebP 组件, 如果你需要支持 WebP，可以在 Podfile 中添加 `pod 'YYImage/WebP'`。
+5. 注意：pod 配置并没有包含 WebP 组件, 如果你需要支持 WebP，可以在 Podfile 中添加 `pod 'YYImage/WebP'`。你可以调用 `YYImageWebPAvailable()` 来检查一下 WebP 组件是否被正确安装。
 
 ### Carthage
 
@@ -283,7 +283,7 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 	* sqlite3
 	* libz
 4. 导入 `YYWebImage.h`。
-5. 注意：如果你需要支持 WebP，可以将 `Vendor/WebP.framework`(静态库) 加入你的工程。
+5. 注意：如果你需要支持 WebP，可以将 `Vendor/WebP.framework`(静态库) 加入你的工程。你可以调用 `YYImageWebPAvailable()` 来检查一下 WebP 组件是否被正确安装。
 
 
 文档
