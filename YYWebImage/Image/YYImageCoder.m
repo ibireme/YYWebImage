@@ -822,7 +822,7 @@ static BOOL YYCGImageDecodeToBitmapBufferWith32BitFormat(CGImageRef srcImage, vI
     } else {
         contextBitmapInfo |= alphaFirst ? kCGImageAlphaPremultipliedFirst : kCGImageAlphaPremultipliedLast;
     }
-    CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, 32, YYCGColorSpaceGetDeviceRGB(), contextBitmapInfo);
+    CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, 0, YYCGColorSpaceGetDeviceRGB(), contextBitmapInfo);
     if (!context) goto fail;
     
     CGContextDrawImage(context, CGRectMake(0, 0, width, height), srcImage); // decode and convert
@@ -1836,6 +1836,13 @@ CGImageRef YYCGImageCreateWithWebPData(CFDataRef webpData,
     dispatch_semaphore_wait(_framesLock, DISPATCH_TIME_FOREVER);
     _frames = frames;
     dispatch_semaphore_signal(_framesLock);
+#else
+    static const char *func = __FUNCTION__;
+    static const int line = __LINE__;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSLog(@"[%s: %d] WebP is not available, check the documentation to see how to install WebP component: https://github.com/ibireme/YYImage#installation", func, line);
+    });
 #endif
 }
 
@@ -1969,13 +1976,16 @@ CGImageRef YYCGImageCreateWithWebPData(CFDataRef webpData,
         if (_type == YYImageTypeGIF) { // get gif loop count
             CFDictionaryRef properties = CGImageSourceCopyProperties(_source, NULL);
             if (properties) {
-                CFTypeRef loop = CFDictionaryGetValue(properties, kCGImagePropertyGIFLoopCount);
-                if (loop) CFNumberGetValue(loop, kCFNumberNSIntegerType, &_loopCount);
+                CFDictionaryRef gif = CFDictionaryGetValue(properties, kCGImagePropertyGIFDictionary);
+                if (gif) {
+                    CFTypeRef loop = CFDictionaryGetValue(gif, kCGImagePropertyGIFLoopCount);
+                    if (loop) CFNumberGetValue(loop, kCFNumberNSIntegerType, &_loopCount);
+                }
                 CFRelease(properties);
             }
         }
     }
-    
+
     /*
      ICO, GIF, APNG may contains multi-frame.
      */
@@ -2312,10 +2322,16 @@ CGImageRef YYCGImageCreateWithWebPData(CFDataRef webpData,
 }
 
 - (instancetype)initWithType:(YYImageType)type {
-    if (type == YYImageTypeUnknown || type >= YYImageTypeOther) return nil;
+    if (type == YYImageTypeUnknown || type >= YYImageTypeOther) {
+        NSLog(@"[%s: %d] Unsupported image type:%d",__FUNCTION__, __LINE__, (int)type);
+        return nil;
+    }
     
 #if !YYIMAGE_WEBP_ENABLED
-    if (type == YYImageTypeWebP) return nil;
+    if (type == YYImageTypeWebP) {
+        NSLog(@"[%s: %d] WebP is not available, check the documentation to see how to install WebP component: https://github.com/ibireme/YYImage#installation", __FUNCTION__, __LINE__);
+        return nil;
+    }
 #endif
     
     self = [super init];
