@@ -360,16 +360,16 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     return totalCost;
 }
 
-- (BOOL)releaseOnMainThread {
+- (BOOL)releaseInMainThread {
     pthread_mutex_lock(&_lock);
-    BOOL releaseOnMainThread = _lru->_releaseOnMainThread;
+    BOOL releaseInMainThread = _lru->_releaseOnMainThread;
     pthread_mutex_unlock(&_lock);
-    return releaseOnMainThread;
+    return releaseInMainThread;
 }
 
-- (void)setReleaseOnMainThread:(BOOL)releaseOnMainThread {
+- (void)setReleaseInMainThread:(BOOL)releaseInMainThread {
     pthread_mutex_lock(&_lock);
-    _lru->_releaseOnMainThread = releaseOnMainThread;
+    _lru->_releaseOnMainThread = releaseInMainThread;
     pthread_mutex_unlock(&_lock);
 }
 

@@ -19,9 +19,6 @@
 #import "sqlite3.h"
 #endif
 
-
-static const NSUInteger kMaxErrorRetryCount = 8;
-static const NSTimeInterval kMinRetryTimeInterval = 2.0;
 static const int kPathLengthMax = PATH_MAX - 64;
 static NSString *const kDBFileName = @"manifest.sqlite";
 static NSString *const kDBShmFileName = @"manifest.sqlite-shm";
@@ -29,19 +26,7 @@ static NSString *const kDBWalFileName = @"manifest.sqlite-wal";
 static NSString *const kDataDirectoryName = @"data";
 static NSString *const kTrashDirectoryName = @"trash";
 
-
 /*
- File:
- /path/
-      /manifest.sqlite
-      /manifest.sqlite-shm
-      /manifest.sqlite-wal
-      /data/
-           /e10adc3949ba59abbe56e057f20f883e
-           /e10adc3949ba59abbe56e057f20f883e
-      /trash/
-            /unused_file_or_folder
- 
  SQL:
  create table if not exists manifest (
     key                 text,
@@ -56,22 +41,6 @@ static NSString *const kTrashDirectoryName = @"trash";
  create index if not exists last_access_time_idx on manifest(last_access_time);
  */
 
-/// Returns nil in App Extension.
-static UIApplication *_YYSharedApplication() {
-    static BOOL isAppExtension = NO;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        Class cls = NSClassFromString(@"UIApplication");
-        if(!cls || ![cls respondsToSelector:@selector(sharedApplication)]) isAppExtension = YES;
-        if ([[[NSBundle mainBundle] bundlePath] hasSuffix:@".appex"]) isAppExtension = YES;
-    });
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
-    return isAppExtension ? nil : [UIApplication performSelector:@selector(sharedApplication)];
-#pragma clang diagnostic pop
-}
-
-
 @implementation YYKVStorageItem
 @end
 
@@ -85,40 +54,49 @@ static UIApplication *_YYSharedApplication() {
     
     sqlite3 *_db;
     CFMutableDictionaryRef _dbStmtCache;
-    NSTimeInterval _dbLastOpenErrorTime;
-    NSUInteger _dbOpenErrorCount;
+    
+    BOOL _invalidated; ///< If YES, then the db should not open again, all read/write should be ignored.
+    BOOL _dbIsClosing; ///< If YES, then the db is during closing.
 }
 
 
 #pragma mark - db
 
 - (BOOL)_dbOpen {
-    if (_db) return YES;
+    BOOL shouldOpen = YES;
+    if (_invalidated) {
+        shouldOpen = NO;
+    } else if (_dbIsClosing) {
+        shouldOpen = NO;
+    } else if (_db){
+        shouldOpen = NO;
+    }
+    if (!shouldOpen) return YES;
     
     int result = sqlite3_open(_dbPath.UTF8String, &_db);
     if (result == SQLITE_OK) {
         CFDictionaryKeyCallBacks keyCallbacks = kCFCopyStringDictionaryKeyCallBacks;
         CFDictionaryValueCallBacks valueCallbacks = {0};
         _dbStmtCache = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &keyCallbacks, &valueCallbacks);
-        _dbLastOpenErrorTime = 0;
-        _dbOpenErrorCount = 0;
         return YES;
     } else {
-        _db = NULL;
-        if (_dbStmtCache) CFRelease(_dbStmtCache);
-        _dbStmtCache = NULL;
-        _dbLastOpenErrorTime = CACurrentMediaTime();
-        _dbOpenErrorCount++;
-        
-        if (_errorLogsEnabled) {
-            NSLog(@"%s line:%d sqlite open failed (%d).", __FUNCTION__, __LINE__, result);
-        }
+        NSLog(@"%s line:%d sqlite open failed (%d).", __FUNCTION__, __LINE__, result);
         return NO;
     }
 }
 
 - (BOOL)_dbClose {
-    if (!_db) return YES;
+    BOOL needClose = YES;
+    if (!_db) {
+        needClose = NO;
+    } else if (_invalidated) {
+        needClose = NO;
+    } else if (_dbIsClosing) {
+        needClose = NO;
+    } else {
+        _dbIsClosing = YES;
+    }
+    if (!needClose) return YES;
     
     int  result = 0;
     BOOL retry = NO;
@@ -140,25 +118,16 @@ static UIApplication *_YYSharedApplication() {
                 }
             }
         } else if (result != SQLITE_OK) {
-            if (_errorLogsEnabled) {
-                NSLog(@"%s line:%d sqlite close failed (%d).", __FUNCTION__, __LINE__, result);
-            }
+            NSLog(@"%s line:%d sqlite close failed (%d).", __FUNCTION__, __LINE__, result);
         }
     } while (retry);
     _db = NULL;
+    _dbIsClosing = NO;
     return YES;
 }
 
-- (BOOL)_dbCheck {
-    if (!_db) {
-        if (_dbOpenErrorCount < kMaxErrorRetryCount &&
-            CACurrentMediaTime() - _dbLastOpenErrorTime > kMinRetryTimeInterval) {
-            return [self _dbOpen] && [self _dbInitialize];
-        } else {
-            return NO;
-        }
-    }
-    return YES;
+- (BOOL)_dbIsReady {
+    return (_db && !_dbIsClosing && !_invalidated);
 }
 
 - (BOOL)_dbInitialize {
@@ -167,14 +136,14 @@ static UIApplication *_YYSharedApplication() {
 }
 
 - (void)_dbCheckpoint {
-    if (![self _dbCheck]) return;
+    if (![self _dbIsReady]) return;
     // Cause a checkpoint to occur, merge `sqlite-wal` file to `sqlite` file.
     sqlite3_wal_checkpoint(_db, NULL);
 }
 
 - (BOOL)_dbExecute:(NSString *)sql {
     if (sql.length == 0) return NO;
-    if (![self _dbCheck]) return NO;
+    if (![self _dbIsReady]) return NO;
     
     char *error = NULL;
     int result = sqlite3_exec(_db, sql.UTF8String, NULL, NULL, &error);
@@ -187,7 +156,7 @@ static UIApplication *_YYSharedApplication() {
 }
 
 - (sqlite3_stmt *)_dbPrepareStmt:(NSString *)sql {
-    if (![self _dbCheck] || sql.length == 0 || !_dbStmtCache) return NULL;
+    if (![self _dbIsReady] || sql.length == 0 || !_dbStmtCache) return NULL;
     sqlite3_stmt *stmt = (sqlite3_stmt *)CFDictionaryGetValue(_dbStmtCache, (__bridge const void *)(sql));
     if (!stmt) {
         int result = sqlite3_prepare_v2(_db, sql.UTF8String, -1, &stmt, NULL);
@@ -261,7 +230,7 @@ static UIApplication *_YYSharedApplication() {
 }
 
 - (BOOL)_dbUpdateAccessTimeWithKeys:(NSArray *)keys {
-    if (![self _dbCheck]) return NO;
+    if (![self _dbIsReady]) return NO;
     int t = (int)time(NULL);
      NSString *sql = [NSString stringWithFormat:@"update manifest set last_access_time = %d where key in (%@);", t, [self _dbJoinedKeys:keys]];
     
@@ -297,7 +266,7 @@ static UIApplication *_YYSharedApplication() {
 }
 
 - (BOOL)_dbDeleteItemWithKeys:(NSArray *)keys {
-    if (![self _dbCheck]) return NO;
+    if (![self _dbIsReady]) return NO;
     NSString *sql =  [NSString stringWithFormat:@"delete from manifest where key in (%@);", [self _dbJoinedKeys:keys]];
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare_v2(_db, sql.UTF8String, -1, &stmt, NULL);
@@ -384,7 +353,7 @@ static UIApplication *_YYSharedApplication() {
 }
 
 - (NSMutableArray *)_dbGetItemWithKeys:(NSArray *)keys excludeInlineData:(BOOL)excludeInlineData {
-    if (![self _dbCheck]) return nil;
+    if (![self _dbIsReady]) return nil;
     NSString *sql;
     if (excludeInlineData) {
         sql = [NSString stringWithFormat:@"select key, filename, size, modification_time, last_access_time, extended_data from manifest where key in (%@);", [self _dbJoinedKeys:keys]];
@@ -458,7 +427,7 @@ static UIApplication *_YYSharedApplication() {
 }
 
 - (NSMutableArray *)_dbGetFilenameWithKeys:(NSArray *)keys {
-    if (![self _dbCheck]) return nil;
+    if (![self _dbIsReady]) return nil;
     NSString *sql = [NSString stringWithFormat:@"select filename from manifest where key in (%@);", [self _dbJoinedKeys:keys]];
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare_v2(_db, sql.UTF8String, -1, &stmt, NULL);
@@ -541,8 +510,8 @@ static UIApplication *_YYSharedApplication() {
     return filenames;
 }
 
-- (NSMutableArray *)_dbGetItemSizeInfoOrderByTimeAscWithLimit:(int)count {
-    NSString *sql = @"select key, filename, size from manifest order by last_access_time asc limit ?1;";
+- (NSMutableArray *)_dbGetItemSizeInfoOrderByTimeDescWithLimit:(int)count {
+    NSString *sql = @"select key, filename, size from manifest order by last_access_time desc limit ?1;";
     sqlite3_stmt *stmt = [self _dbPrepareStmt:sql];
     if (!stmt) return nil;
     sqlite3_bind_int(stmt, 1, count);
@@ -611,22 +580,26 @@ static UIApplication *_YYSharedApplication() {
 #pragma mark - file
 
 - (BOOL)_fileWriteWithName:(NSString *)filename data:(NSData *)data {
+    if (_invalidated) return NO;
     NSString *path = [_dataPath stringByAppendingPathComponent:filename];
     return [data writeToFile:path atomically:NO];
 }
 
 - (NSData *)_fileReadWithName:(NSString *)filename {
+    if (_invalidated) return nil;
     NSString *path = [_dataPath stringByAppendingPathComponent:filename];
     NSData *data = [NSData dataWithContentsOfFile:path];
     return data;
 }
 
 - (BOOL)_fileDeleteWithName:(NSString *)filename {
+    if (_invalidated) return NO;
     NSString *path = [_dataPath stringByAppendingPathComponent:filename];
     return [[NSFileManager defaultManager] removeItemAtPath:path error:NULL];
 }
 
 - (BOOL)_fileMoveAllToTrash {
+    if (_invalidated) return NO;
     CFUUIDRef uuidRef = CFUUIDCreate(NULL);
     CFStringRef uuid = CFUUIDCreateString(NULL, uuidRef);
     CFRelease(uuidRef);
@@ -640,6 +613,7 @@ static UIApplication *_YYSharedApplication() {
 }
 
 - (void)_fileEmptyTrashInBackground {
+    if (_invalidated) return;
     NSString *trashPath = _trashPath;
     dispatch_queue_t queue = _trashQueue;
     dispatch_async(queue, ^{
@@ -665,6 +639,10 @@ static UIApplication *_YYSharedApplication() {
     [[NSFileManager defaultManager] removeItemAtPath:[_path stringByAppendingPathComponent:kDBWalFileName] error:nil];
     [self _fileMoveAllToTrash];
     [self _fileEmptyTrashInBackground];
+}
+
+- (void)_appWillBeTerminated {
+    _invalidated = YES;
 }
 
 #pragma mark - public
@@ -720,15 +698,13 @@ static UIApplication *_YYSharedApplication() {
         return nil;
     }
     [self _fileEmptyTrashInBackground]; // empty the trash if failed at last time
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_appWillBeTerminated) name:UIApplicationWillTerminateNotification object:nil];
     return self;
 }
 
 - (void)dealloc {
-    UIBackgroundTaskIdentifier taskID = [_YYSharedApplication() beginBackgroundTaskWithExpirationHandler:^{}];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
     [self _dbClose];
-    if (taskID != UIBackgroundTaskInvalid) {
-        [_YYSharedApplication() endBackgroundTask:taskID];
-    }
 }
 
 - (BOOL)saveItem:(YYKVStorageItem *)item {
@@ -865,7 +841,7 @@ static UIApplication *_YYSharedApplication() {
     BOOL suc = NO;
     do {
         int perCount = 16;
-        items = [self _dbGetItemSizeInfoOrderByTimeAscWithLimit:perCount];
+        items = [self _dbGetItemSizeInfoOrderByTimeDescWithLimit:perCount];
         for (YYKVStorageItem *item in items) {
             if (total > maxSize) {
                 if (item.filename) {
@@ -895,7 +871,7 @@ static UIApplication *_YYSharedApplication() {
     BOOL suc = NO;
     do {
         int perCount = 16;
-        items = [self _dbGetItemSizeInfoOrderByTimeAscWithLimit:perCount];
+        items = [self _dbGetItemSizeInfoOrderByTimeDescWithLimit:perCount];
         for (YYKVStorageItem *item in items) {
             if (total > maxCount) {
                 if (item.filename) {
@@ -933,7 +909,7 @@ static UIApplication *_YYSharedApplication() {
         NSArray *items = nil;
         BOOL suc = NO;
         do {
-            items = [self _dbGetItemSizeInfoOrderByTimeAscWithLimit:perCount];
+            items = [self _dbGetItemSizeInfoOrderByTimeDescWithLimit:perCount];
             for (YYKVStorageItem *item in items) {
                 if (left > 0) {
                     if (item.filename) {

@@ -131,10 +131,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property NSTimeInterval autoTrimInterval;
 
-/**
- Set `YES` to enable error logs for debug.
- */
-@property BOOL errorLogsEnabled;
 
 #pragma mark - Initializer
 ///=============================================================================
