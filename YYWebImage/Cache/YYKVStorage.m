@@ -846,7 +846,7 @@ static UIApplication *_YYSharedApplication() {
             }
             if ([self _dbDeleteItemsWithTimeEarlierThan:time]) {
                 [self _dbCheckpoint];
-                return NO;
+                return YES;
             }
         } break;
     }
