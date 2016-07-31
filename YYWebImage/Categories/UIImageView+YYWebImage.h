@@ -168,7 +168,7 @@ NS_ASSUME_NONNULL_BEGIN
  Set the view's `highlightedImage` with a specified URL.
  
  @param imageURL    The image url (remote or local file path).
- @param placeholder he image to be set initially, until the image request finishes.
+ @param placeholder The image to be set initially, until the image request finishes.
  @param options     The options to use when request the image.
  @param manager     The manager to create image request operation.
  @param progress    The block invoked (on main thread) during image request.
