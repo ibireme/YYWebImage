@@ -8,43 +8,43 @@
 
 /* Begin PBXBuildFile section */
 		D97539951BD2997800C6F4B8 /* YYCache.h in Headers */ = {isa = PBXBuildFile; fileRef = D97539701BD2997800C6F4B8 /* YYCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539961BD2997800C6F4B8 /* YYCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539711BD2997800C6F4B8 /* YYCache.m */; settings = {ASSET_TAGS = (); }; };
+		D97539961BD2997800C6F4B8 /* YYCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539711BD2997800C6F4B8 /* YYCache.m */; };
 		D97539971BD2997800C6F4B8 /* YYDiskCache.h in Headers */ = {isa = PBXBuildFile; fileRef = D97539721BD2997800C6F4B8 /* YYDiskCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539981BD2997800C6F4B8 /* YYDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539731BD2997800C6F4B8 /* YYDiskCache.m */; settings = {ASSET_TAGS = (); }; };
+		D97539981BD2997800C6F4B8 /* YYDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539731BD2997800C6F4B8 /* YYDiskCache.m */; };
 		D97539991BD2997800C6F4B8 /* YYKVStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = D97539741BD2997800C6F4B8 /* YYKVStorage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D975399A1BD2997800C6F4B8 /* YYKVStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539751BD2997800C6F4B8 /* YYKVStorage.m */; settings = {ASSET_TAGS = (); }; };
+		D975399A1BD2997800C6F4B8 /* YYKVStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539751BD2997800C6F4B8 /* YYKVStorage.m */; };
 		D975399B1BD2997800C6F4B8 /* YYMemoryCache.h in Headers */ = {isa = PBXBuildFile; fileRef = D97539761BD2997800C6F4B8 /* YYMemoryCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D975399C1BD2997800C6F4B8 /* YYMemoryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539771BD2997800C6F4B8 /* YYMemoryCache.m */; settings = {ASSET_TAGS = (); }; };
+		D975399C1BD2997800C6F4B8 /* YYMemoryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539771BD2997800C6F4B8 /* YYMemoryCache.m */; };
 		D975399D1BD2997800C6F4B8 /* _YYWebImageSetter.h in Headers */ = {isa = PBXBuildFile; fileRef = D97539791BD2997800C6F4B8 /* _YYWebImageSetter.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D975399E1BD2997800C6F4B8 /* _YYWebImageSetter.m in Sources */ = {isa = PBXBuildFile; fileRef = D975397A1BD2997800C6F4B8 /* _YYWebImageSetter.m */; settings = {ASSET_TAGS = (); }; };
+		D975399E1BD2997800C6F4B8 /* _YYWebImageSetter.m in Sources */ = {isa = PBXBuildFile; fileRef = D975397A1BD2997800C6F4B8 /* _YYWebImageSetter.m */; };
 		D975399F1BD2997800C6F4B8 /* CALayer+YYWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = D975397B1BD2997800C6F4B8 /* CALayer+YYWebImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539A01BD2997800C6F4B8 /* CALayer+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D975397C1BD2997800C6F4B8 /* CALayer+YYWebImage.m */; settings = {ASSET_TAGS = (); }; };
+		D97539A01BD2997800C6F4B8 /* CALayer+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D975397C1BD2997800C6F4B8 /* CALayer+YYWebImage.m */; };
 		D97539A11BD2997800C6F4B8 /* MKAnnotationView+YYWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = D975397D1BD2997800C6F4B8 /* MKAnnotationView+YYWebImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539A21BD2997800C6F4B8 /* MKAnnotationView+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D975397E1BD2997800C6F4B8 /* MKAnnotationView+YYWebImage.m */; settings = {ASSET_TAGS = (); }; };
+		D97539A21BD2997800C6F4B8 /* MKAnnotationView+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D975397E1BD2997800C6F4B8 /* MKAnnotationView+YYWebImage.m */; };
 		D97539A31BD2997800C6F4B8 /* UIButton+YYWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = D975397F1BD2997800C6F4B8 /* UIButton+YYWebImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539A41BD2997800C6F4B8 /* UIButton+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539801BD2997800C6F4B8 /* UIButton+YYWebImage.m */; settings = {ASSET_TAGS = (); }; };
+		D97539A41BD2997800C6F4B8 /* UIButton+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539801BD2997800C6F4B8 /* UIButton+YYWebImage.m */; };
 		D97539A51BD2997800C6F4B8 /* UIImageView+YYWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = D97539811BD2997800C6F4B8 /* UIImageView+YYWebImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539A61BD2997800C6F4B8 /* UIImageView+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539821BD2997800C6F4B8 /* UIImageView+YYWebImage.m */; settings = {ASSET_TAGS = (); }; };
+		D97539A61BD2997800C6F4B8 /* UIImageView+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539821BD2997800C6F4B8 /* UIImageView+YYWebImage.m */; };
 		D97539A71BD2997800C6F4B8 /* YYAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = D97539841BD2997800C6F4B8 /* YYAnimatedImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539A81BD2997800C6F4B8 /* YYAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539851BD2997800C6F4B8 /* YYAnimatedImageView.m */; settings = {ASSET_TAGS = (); }; };
+		D97539A81BD2997800C6F4B8 /* YYAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539851BD2997800C6F4B8 /* YYAnimatedImageView.m */; };
 		D97539A91BD2997800C6F4B8 /* YYFrameImage.h in Headers */ = {isa = PBXBuildFile; fileRef = D97539861BD2997800C6F4B8 /* YYFrameImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539AA1BD2997800C6F4B8 /* YYFrameImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539871BD2997800C6F4B8 /* YYFrameImage.m */; settings = {ASSET_TAGS = (); }; };
+		D97539AA1BD2997800C6F4B8 /* YYFrameImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539871BD2997800C6F4B8 /* YYFrameImage.m */; };
 		D97539AB1BD2997800C6F4B8 /* YYImage.h in Headers */ = {isa = PBXBuildFile; fileRef = D97539881BD2997800C6F4B8 /* YYImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539AC1BD2997800C6F4B8 /* YYImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539891BD2997800C6F4B8 /* YYImage.m */; settings = {ASSET_TAGS = (); }; };
+		D97539AC1BD2997800C6F4B8 /* YYImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539891BD2997800C6F4B8 /* YYImage.m */; };
 		D97539AD1BD2997800C6F4B8 /* YYImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = D975398A1BD2997800C6F4B8 /* YYImageCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539AE1BD2997800C6F4B8 /* YYImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D975398B1BD2997800C6F4B8 /* YYImageCoder.m */; settings = {ASSET_TAGS = (); }; };
+		D97539AE1BD2997800C6F4B8 /* YYImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = D975398B1BD2997800C6F4B8 /* YYImageCoder.m */; };
 		D97539AF1BD2997800C6F4B8 /* YYSpriteSheetImage.h in Headers */ = {isa = PBXBuildFile; fileRef = D975398C1BD2997800C6F4B8 /* YYSpriteSheetImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539B01BD2997800C6F4B8 /* YYSpriteSheetImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D975398D1BD2997800C6F4B8 /* YYSpriteSheetImage.m */; settings = {ASSET_TAGS = (); }; };
+		D97539B01BD2997800C6F4B8 /* YYSpriteSheetImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D975398D1BD2997800C6F4B8 /* YYSpriteSheetImage.m */; };
 		D97539B11BD2997800C6F4B8 /* YYImageCache.h in Headers */ = {isa = PBXBuildFile; fileRef = D975398E1BD2997800C6F4B8 /* YYImageCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539B21BD2997800C6F4B8 /* YYImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D975398F1BD2997800C6F4B8 /* YYImageCache.m */; settings = {ASSET_TAGS = (); }; };
+		D97539B21BD2997800C6F4B8 /* YYImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D975398F1BD2997800C6F4B8 /* YYImageCache.m */; };
 		D97539B31BD2997800C6F4B8 /* YYWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = D97539901BD2997800C6F4B8 /* YYWebImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D97539B41BD2997800C6F4B8 /* YYWebImageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D97539911BD2997800C6F4B8 /* YYWebImageManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539B51BD2997800C6F4B8 /* YYWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539921BD2997800C6F4B8 /* YYWebImageManager.m */; settings = {ASSET_TAGS = (); }; };
+		D97539B51BD2997800C6F4B8 /* YYWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539921BD2997800C6F4B8 /* YYWebImageManager.m */; };
 		D97539B61BD2997800C6F4B8 /* YYWebImageOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = D97539931BD2997800C6F4B8 /* YYWebImageOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539B71BD2997800C6F4B8 /* YYWebImageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539941BD2997800C6F4B8 /* YYWebImageOperation.m */; settings = {ASSET_TAGS = (); }; };
+		D97539B71BD2997800C6F4B8 /* YYWebImageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539941BD2997800C6F4B8 /* YYWebImageOperation.m */; };
 		D97539BA1BD2A92300C6F4B8 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D97539B91BD2A92300C6F4B8 /* libsqlite3.tbd */; };
 		D97539BD1BD2AC3E00C6F4B8 /* UIImage+YYWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = D97539BB1BD2AC3E00C6F4B8 /* UIImage+YYWebImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D97539BE1BD2AC3E00C6F4B8 /* UIImage+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539BC1BD2AC3E00C6F4B8 /* UIImage+YYWebImage.m */; settings = {ASSET_TAGS = (); }; };
+		D97539BE1BD2AC3E00C6F4B8 /* UIImage+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D97539BC1BD2AC3E00C6F4B8 /* UIImage+YYWebImage.m */; };
 		D97539C41BD2D17F00C6F4B8 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D97539C31BD2D17F00C6F4B8 /* libz.tbd */; };
 		D97539C61BD35C3A00C6F4B8 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97539C51BD35C3A00C6F4B8 /* MobileCoreServices.framework */; };
 		D97539C81BD35C3F00C6F4B8 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97539C71BD35C3F00C6F4B8 /* AssetsLibrary.framework */; };
@@ -285,7 +285,7 @@
 		D97539571BD2970400C6F4B8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = ibireme;
 				TargetAttributes = {
 					D975395F1BD2970400C6F4B8 = {
@@ -362,8 +362,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -386,7 +388,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -409,8 +411,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -427,7 +431,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
