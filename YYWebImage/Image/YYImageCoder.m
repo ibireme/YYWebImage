@@ -2783,7 +2783,7 @@ CGImageRef YYCGImageCreateWithWebPData(CFDataRef webpData,
 }
 
 - (BOOL)yy_isDecodedForDisplay {
-    if (self.images.count > 1) return YES;
+    if (self.images.count > 1 || [self isKindOfClass:[YYSpriteSheetImage class]]) return YES;
     NSNumber *num = objc_getAssociatedObject(self, @selector(yy_isDecodedForDisplay));
     return [num boolValue];
 }
