@@ -726,7 +726,8 @@ static void URLInBlackListAdd(NSURL *url) {
                 if (error.code != NSURLErrorNotConnectedToInternet &&
                     error.code != NSURLErrorCancelled &&
                     error.code != NSURLErrorTimedOut &&
-                    error.code != NSURLErrorUserCancelledAuthentication) {
+                    error.code != NSURLErrorUserCancelledAuthentication &&
+                    error.code != NSURLErrorNetworkConnectionLost) {
                     URLInBlackListAdd(_request.URL);
                 }
             }
