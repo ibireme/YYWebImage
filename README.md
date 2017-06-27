@@ -2,8 +2,8 @@ YYWebImage
 ==============
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/ibireme/YYWebImage/master/LICENSE)&nbsp;
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)&nbsp;
-[![CocoaPods](http://img.shields.io/cocoapods/v/YYWebImage.svg?style=flat)](http://cocoapods.org/?q=YYWebImage)&nbsp;
-[![CocoaPods](http://img.shields.io/cocoapods/p/YYWebImage.svg?style=flat)](http://cocoapods.org/?q=YYWebImage)&nbsp;
+[![CocoaPods](http://img.shields.io/cocoapods/v/YYWebImage.svg?style=flat)](http://cocoapods.org/pods/YYWebImage)&nbsp;
+[![CocoaPods](http://img.shields.io/cocoapods/p/YYWebImage.svg?style=flat)](http://cocoadocs.org/docsets/YYWebImage)&nbsp;
 [![Support](https://img.shields.io/badge/support-iOS%206%2B%20-blue.svg?style=flat)](https://www.apple.com/nl/ios/)&nbsp;
 [![Build Status](https://travis-ci.org/ibireme/YYWebImage.svg?branch=master)](https://travis-ci.org/ibireme/YYWebImage)
 
@@ -32,74 +32,77 @@ Features
 Usage
 ==============
 
-###Load image from URL
+### Load image from URL
+```objc
+// load from remote url
+imageView.yy_imageURL = [NSURL URLWithString:@"http://github.com/logo.png"];
+	
+// load from local url
+imageView.yy_imageURL = [NSURL fileURLWithPath:@"/tmp/logo.png"];
+```	
 
-	// load from remote url
-	imageView.yy_imageURL = [NSURL URLWithString:@"http://github.com/logo.png"];
-	
-	// load from local url
-	imageView.yy_imageURL = [NSURL fileURLWithPath:@"/tmp/logo.png"];
-	
+### Load animated image
+```objc
+// just replace `UIImageView` with `YYAnimatedImageView`
+UIImageView *imageView = [YYAnimatedImageView new];
+imageView.yy_imageURL = [NSURL URLWithString:@"http://github.com/ani.webp"];
+```
 
-###Load animated image
+### Load image progressively
+```objc
+// progressive
+[imageView yy_setImageWithURL:url options:YYWebImageOptionProgressive];
 	
-	// just replace `UIImageView` with `YYAnimatedImageView`
-	UIImageView *imageView = [YYAnimatedImageView new];
-	imageView.yy_imageURL = [NSURL URLWithString:@"http://github.com/ani.webp"];
+// progressive with blur and fade animation (see the demo at the top of this page)
+[imageView yy_setImageWithURL:url options:YYWebImageOptionProgressiveBlur ｜ YYWebImageOptionSetImageWithFadeAnimation];
+```
 
-
-###Load image progressively
+### Load and process image
+```objc
+// 1. download image from remote
+// 2. get download progress
+// 3. resize image and add round corner
+// 4. set image with a fade animation
 	
-	// progressive
-	[imageView yy_setImageWithURL:url options:YYWebImageOptionProgressive];
-	
-	// progressive with blur and fade animation (see the demo at the top of this page)
-	[imageView yy_setImageWithURL:url options:YYWebImageOptionProgressiveBlur ｜ YYWebImageOptionSetImageWithFadeAnimation];
-
-
-###Load and process image
-	
-	// 1. download image from remote
-	// 2. get download progress
-	// 3. resize image and add round corner
-	// 4. set image with a fade animation
-	
-	[imageView yy_setImageWithURL:url
-        placeholder:nil
-        options:YYWebImageOptionSetImageWithFadeAnimation
-        progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-            progress = (float)receivedSize / expectedSize;
-        }
-        transform:^UIImage *(UIImage *image, NSURL *url) {
-            image = [image yy_imageByResizeToSize:CGSizeMake(100, 100) contentMode:UIViewContentModeCenter];
-            return [image yy_imageByRoundCornerRadius:10];
-        }
-        completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
-            if (from == YYWebImageFromDiskCache) {
-                NSLog(@"load from disk cache");
-            }
-        }];
-        
-###Image Cache
-    YYImageCache *cache = [YYWebImageManager sharedManager].cache;
+[imageView yy_setImageWithURL:url
+   placeholder:nil
+   options:YYWebImageOptionSetImageWithFadeAnimation
+   progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+       progress = (float)receivedSize / expectedSize;
+   }
+   transform:^UIImage *(UIImage *image, NSURL *url) {
+       image = [image yy_imageByResizeToSize:CGSizeMake(100, 100) contentMode:UIViewContentModeCenter];
+       return [image yy_imageByRoundCornerRadius:10];
+   }
+   completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
+       if (from == YYWebImageFromDiskCache) {
+           NSLog(@"load from disk cache");
+       }
+   }];
+```
+ 
+### Image Cache
+```objc
+YYImageCache *cache = [YYWebImageManager sharedManager].cache;
     
-    // get cache capacity
-    cache.memoryCache.totalCost;
-    cache.memoryCache.totalCount;
-    cache.diskCache.totalCost;
-    cache.diskCache.totalCount;
+// get cache capacity
+cache.memoryCache.totalCost;
+cache.memoryCache.totalCount;
+cache.diskCache.totalCost;
+cache.diskCache.totalCount;
     
-    // clear cache
-    [cache.memoryCache removeAllObjects];
-    [cache.diskCache removeAllObjects];
+// clear cache
+[cache.memoryCache removeAllObjects];
+[cache.diskCache removeAllObjects];
     
-    // clear disk cache with progress
-    [cache.diskCache removeAllObjectsWithProgressBlock:^(int removedCount, int totalCount) {
-        // progress
-    } endBlock:^(BOOL error) {
-        // end
-    }];
-	
+// clear disk cache with progress
+[cache.diskCache removeAllObjectsWithProgressBlock:^(int removedCount, int totalCount) {
+   // progress
+} endBlock:^(BOOL error) {
+   // end
+}];
+```
+
 Installation
 ==============
 
@@ -144,7 +147,7 @@ You can also install documentation locally using [appledoc](https://github.com/t
 
 Requirements
 ==============
-This library requires `iOS 6.0+` and `Xcode 7.0+`.
+This library requires `iOS 6.0+` and `Xcode 8.0+`.
 
 
 License
@@ -181,75 +184,77 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 用法
 ==============
 
-###从 URL 加载图片
-
-	// 加载网络图片
-	imageView.yy_imageURL = [NSURL URLWithString:@"http://github.com/logo.png"];
+### 从 URL 加载图片
+```objc
+// 加载网络图片
+imageView.yy_imageURL = [NSURL URLWithString:@"http://github.com/logo.png"];
 	
-	// 加载本地图片
-	imageView.yy_imageURL = [NSURL fileURLWithPath:@"/tmp/logo.png"];
+// 加载本地图片
+imageView.yy_imageURL = [NSURL fileURLWithPath:@"/tmp/logo.png"];
+```	
+
+### 加载动图
+```objc
+// 只需要把 `UIImageView` 替换为 `YYAnimatedImageView` 即可。
+UIImageView *imageView = [YYAnimatedImageView new];
+imageView.yy_imageURL = [NSURL URLWithString:@"http://github.com/ani.webp"];
+```
+
+### 渐进式图片加载
+```objc
+// 渐进式：边下载边显示
+[imageView yy_setImageWithURL:url options:YYWebImageOptionProgressive];
 	
+// 渐进式加载，增加模糊效果和渐变动画 （见本页最上方的GIF演示）
+[imageView yy_setImageWithURL:url options:YYWebImageOptionProgressiveBlur ｜ YYWebImageOptionSetImageWithFadeAnimation];
+```
 
-###加载动图
+### 加载、处理图片
+```objc
+// 1. 下载图片
+// 2. 获得图片下载进度
+// 3. 调整图片大小、加圆角
+// 4. 显示图片时增加一个淡入动画，以获得更好的用户体验
 	
-	// 只需要把 `UIImageView` 替换为 `YYAnimatedImageView` 即可。
-	UIImageView *imageView = [YYAnimatedImageView new];
-	imageView.yy_imageURL = [NSURL URLWithString:@"http://github.com/ani.webp"];
+[imageView yy_setImageWithURL:url
+   placeholder:nil
+   options:YYWebImageOptionSetImageWithFadeAnimation
+   progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+       progress = (float)receivedSize / expectedSize;
+   }
+   transform:^UIImage *(UIImage *image, NSURL *url) {
+       image = [image yy_imageByResizeToSize:CGSizeMake(100, 100) contentMode:UIViewContentModeCenter];
+       return [image yy_imageByRoundCornerRadius:10];
+   }
+   completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
+       if (from == YYWebImageFromDiskCache) {
+           NSLog(@"load from disk cache");
+       }
+   }];
+```
 
-
-###渐进式图片加载
-	
-	// 渐进式：边下载边显示
-	[imageView yy_setImageWithURL:url options:YYWebImageOptionProgressive];
-	
-	// 渐进式加载，增加模糊效果和渐变动画 （见本页最上方的GIF演示）
-	[imageView yy_setImageWithURL:url options:YYWebImageOptionProgressiveBlur ｜ YYWebImageOptionSetImageWithFadeAnimation];
-
-
-###加载、处理图片
-	
-	// 1. 下载图片
-	// 2. 获得图片下载进度
-	// 3. 调整图片大小、加圆角
-	// 4. 显示图片时增加一个淡入动画，以获得更好的用户体验
-	
-	[imageView yy_setImageWithURL:url
-        placeholder:nil
-        options:YYWebImageOptionSetImageWithFadeAnimation
-        progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-            progress = (float)receivedSize / expectedSize;
-        }
-        transform:^UIImage *(UIImage *image, NSURL *url) {
-            image = [image yy_imageByResizeToSize:CGSizeMake(100, 100) contentMode:UIViewContentModeCenter];
-            return [image yy_imageByRoundCornerRadius:10];
-        }
-        completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
-            if (from == YYWebImageFromDiskCache) {
-                NSLog(@"load from disk cache");
-            }
-        }];
-
-
-###图片缓存
-    YYImageCache *cache = [YYWebImageManager sharedManager].cache;
+### 图片缓存
+```objc
+YYImageCache *cache = [YYWebImageManager sharedManager].cache;
     
-    // 获取缓存大小
-    cache.memoryCache.totalCost;
-    cache.memoryCache.totalCount;
-    cache.diskCache.totalCost;
-    cache.diskCache.totalCount;
+// 获取缓存大小
+cache.memoryCache.totalCost;
+cache.memoryCache.totalCount;
+cache.diskCache.totalCost;
+cache.diskCache.totalCount;
     
-    // 清空缓存
-    [cache.memoryCache removeAllObjects];
-    [cache.diskCache removeAllObjects];
+// 清空缓存
+[cache.memoryCache removeAllObjects];
+[cache.diskCache removeAllObjects];
     
-    // 清空磁盘缓存，带进度回调
-    [cache.diskCache removeAllObjectsWithProgressBlock:^(int removedCount, int totalCount) {
-        // progress
-    } endBlock:^(BOOL error) {
-        // end
-    }];
-	
+// 清空磁盘缓存，带进度回调
+[cache.diskCache removeAllObjectsWithProgressBlock:^(int removedCount, int totalCount) {
+   // progress
+} endBlock:^(BOOL error) {
+   // end
+}];
+```
+
 安装
 ==============
 
@@ -293,7 +298,7 @@ YYWebImage 是一个异步图片加载框架 ([YYKit](https://github.com/ibireme
 
 系统要求
 ==============
-该项目最低支持 `iOS 6.0` 和 `Xcode 7.0`。
+该项目最低支持 `iOS 6.0` 和 `Xcode 8.0`。
 
 
 许可证
