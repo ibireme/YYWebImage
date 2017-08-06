@@ -20,7 +20,7 @@
 @implementation YYImageExample
 
 - (void)viewDidLoad {
-    self.title = @"YYWebImage Demo";
+    self.title = @"Demo";
     [super viewDidLoad];
     self.titles = @[].mutableCopy;
     self.classNames = @[].mutableCopy;
