@@ -368,7 +368,7 @@ static void URLInBlackListAdd(NSURL *url) {
             NSArray *keys = @[NSURLFileSizeKey];
             NSDictionary *attr = [_request.URL resourceValuesForKeys:keys error:nil];
             NSNumber *fileSize = attr[NSURLFileSizeKey];
-            _expectedSize = fileSize ? fileSize.unsignedIntegerValue : -1;
+            _expectedSize = (fileSize != nil) ? fileSize.unsignedIntegerValue : -1;
         }
         
         // request image from web
