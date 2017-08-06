@@ -307,7 +307,7 @@ YYWebImage 使用 MIT 许可证，详情见 LICENSE 文件。
 
 相关链接
 ==============
-[移动端图片格式调研](http://blog.ibireme.com/2015/11/02/mobile_image_benchmark/)<br/>
+[移动端图片格式调研](https://blog.ibireme.com/2015/11/02/mobile_image_benchmark/)<br/>
 
-[iOS 处理图片的一些小 Tip](http://blog.ibireme.com/2015/11/02/ios_image_tips/)
+[iOS 处理图片的一些小 Tip](https://blog.ibireme.com/2015/11/02/ios_image_tips/)
 
