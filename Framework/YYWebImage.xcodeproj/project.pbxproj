@@ -130,7 +130,6 @@
 			isa = PBXGroup;
 			children = (
 				D98DD8A51F36DD0800582F3B /* YYWebImage */,
-				D9312D0A1F36DC820055FE6D /* Info.plist */,
 				D98DD8F31F36DD5E00582F3B /* Frameworks */,
 				D9312D071F36DC820055FE6D /* Products */,
 			);
@@ -147,9 +146,6 @@
 		D98DD8A51F36DD0800582F3B /* YYWebImage */ = {
 			isa = PBXGroup;
 			children = (
-				D98DD8A61F36DD0800582F3B /* Cache */,
-				D98DD8BC1F36DD0800582F3B /* Image */,
-				D98DD8AF1F36DD0800582F3B /* Categories */,
 				D98DD8C91F36DD0800582F3B /* YYWebImage.h */,
 				D98DD8C71F36DD0800582F3B /* YYImageCache.h */,
 				D98DD8C81F36DD0800582F3B /* YYImageCache.m */,
@@ -157,6 +153,9 @@
 				D98DD8CB1F36DD0800582F3B /* YYWebImageManager.m */,
 				D98DD8CC1F36DD0800582F3B /* YYWebImageOperation.h */,
 				D98DD8CD1F36DD0800582F3B /* YYWebImageOperation.m */,
+				D98DD8A61F36DD0800582F3B /* Cache */,
+				D98DD8BC1F36DD0800582F3B /* Image */,
+				D98DD8AF1F36DD0800582F3B /* Categories */,
 			);
 			name = YYWebImage;
 			path = ../YYWebImage;
@@ -169,10 +168,10 @@
 				D98DD8A81F36DD0800582F3B /* YYCache.m */,
 				D98DD8A91F36DD0800582F3B /* YYDiskCache.h */,
 				D98DD8AA1F36DD0800582F3B /* YYDiskCache.m */,
-				D98DD8AB1F36DD0800582F3B /* YYKVStorage.h */,
-				D98DD8AC1F36DD0800582F3B /* YYKVStorage.m */,
 				D98DD8AD1F36DD0800582F3B /* YYMemoryCache.h */,
 				D98DD8AE1F36DD0800582F3B /* YYMemoryCache.m */,
+				D98DD8AB1F36DD0800582F3B /* YYKVStorage.h */,
+				D98DD8AC1F36DD0800582F3B /* YYKVStorage.m */,
 			);
 			path = Cache;
 			sourceTree = "<group>";
@@ -199,12 +198,12 @@
 		D98DD8BC1F36DD0800582F3B /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				D98DD8C11F36DD0800582F3B /* YYImage.h */,
+				D98DD8C21F36DD0800582F3B /* YYImage.m */,
 				D98DD8BD1F36DD0800582F3B /* YYAnimatedImageView.h */,
 				D98DD8BE1F36DD0800582F3B /* YYAnimatedImageView.m */,
 				D98DD8BF1F36DD0800582F3B /* YYFrameImage.h */,
 				D98DD8C01F36DD0800582F3B /* YYFrameImage.m */,
-				D98DD8C11F36DD0800582F3B /* YYImage.h */,
-				D98DD8C21F36DD0800582F3B /* YYImage.m */,
 				D98DD8C31F36DD0800582F3B /* YYImageCoder.h */,
 				D98DD8C41F36DD0800582F3B /* YYImageCoder.m */,
 				D98DD8C51F36DD0800582F3B /* YYSpriteSheetImage.h */,
@@ -216,6 +215,7 @@
 		D98DD8F31F36DD5E00582F3B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D9312D0A1F36DC820055FE6D /* Info.plist */,
 				D98DD9041F36DD8500582F3B /* libsqlite3.tbd */,
 				D98DD9021F36DD8100582F3B /* libz.tbd */,
 				D98DD9001F36DD7D00582F3B /* MobileCoreServices.framework */,
